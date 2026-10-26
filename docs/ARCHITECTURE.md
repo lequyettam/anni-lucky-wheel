@@ -20,6 +20,8 @@ Hướng thủ tục không đồng nghĩa với tái sử dụng bằng hàm. H
 - Mỗi spin có requestId để gửi lại không tạo thêm thưởng.
 - Trừ tồn ngay lúc cấp quà; đổi voucher không trừ tồn lần nữa.
 - Voucher lưu snapshot tên, điều kiện, hạn dùng và chi nhánh tại lúc cấp.
+- Khách tự dùng chỉ được thao tác voucher thuộc ví của mình. Khách và nhân viên cùng gọi một chuyển trạng thái nguyên tử; chỉ một bên thành công, kể cả khi bấm đồng thời. Không ghi đè người/thời gian đã dùng và không trừ tồn thêm khi dùng voucher.
+- Voucher đã dùng và lịch sử xác nhận lưu loại người thao tác (khách/nhân viên), định danh khi có, tên và thời gian. Bản ghi 0.1 thiếu loại người thao tác được hiển thị là nhân viên, vẫn giữ trạng thái đã dùng.
 - Nhập số điện thoại không chứng minh quyền sở hữu số. Mã khôi phục bảo vệ truy cập ví đã tạo, không thay thế xác thực danh tính.
 
 ## Giai đoạn máy chủ: Laravel + MySQL
@@ -33,12 +35,13 @@ API dự kiến (hợp đồng cần hoàn thiện lúc triển khai):
 - POST /api/customer/sessions — mở/khôi phục phiên.
 - GET /api/campaign — cấu hình công khai, không lộ kho mã cấp lượt.
 - GET /api/me/balance, GET /api/me/vouchers.
+- POST /api/me/vouchers/{id}/redeem — xác nhận sử dụng voucher thuộc khách đã đăng nhập; actor được lấy từ session phía máy chủ, không tin userId/role do trình duyệt gửi.
 - POST /api/code-activations — kích hoạt mã, giữ quota trong transaction.
 - POST /api/spins — idempotency key; chọn kết quả ngẫu nhiên phía máy chủ; giữ tồn và trừ lượt cùng transaction.
-- POST /api/staff/redemptions — khóa voucher, kiểm tra hạn và chưa đổi, ghi nhân viên/chi nhánh.
+- POST /api/staff/redemptions — xác nhận từ danh sách hoặc tra cứu mã; lấy nhân viên từ phiên đã phân quyền. Dùng cùng VoucherService với luồng khách, khóa voucher, kiểm tra hạn và chưa đổi, ghi nguồn/người/chi nhánh trong cùng transaction.
 - CRUD /api/admin/prizes, access-codes, campaign; báo cáo và audit.
 
-Dùng khóa hàng hoặc conditional update để tránh vượt tồn khi nhiều người quay. Unique constraints cho mã voucher, requestId theo khách và các ràng buộc nghiệp vụ liên quan. Thời gian máy chủ là nguồn chuẩn, lưu UTC và quy đổi ngày bằng Asia/Ho_Chi_Minh.
+Dùng khóa hàng hoặc conditional update để tránh vượt tồn khi nhiều người quay. Unique constraints cho mã voucher, requestId theo khách và voucher_id trong redemptions. Với sử dụng voucher, chỉ ghi thành công khi redeemed_at IS NULL và expires_at > thời gian máy chủ; chuyển trạng thái và audit phải cùng transaction. Client tải lại trạng thái từ API khi mở ví/chi tiết hoặc sau xác nhận; có thể dùng polling/SSE để cập nhật thiết bị khác. Sự kiện localStorage trong demo chỉ cập nhật các tab cùng nguồn, không đồng bộ thiết bị. Thời gian máy chủ là nguồn chuẩn, lưu UTC và quy đổi ngày bằng Asia/Ho_Chi_Minh.
 
 Đăng nhập nhân viên thật, cookie HttpOnly/Secure, CSRF, phân quyền admin/thu ngân, rate limit đăng nhập và mã, sao lưu, HTTPS và audit là phần bắt buộc trước khi chạy quà thật. Mã khôi phục tạo ngẫu nhiên đủ mạnh; chỉ trả lúc cấp, lưu hash phía máy chủ; quy trình hỗ trợ khi mất mã cần được chốt. localStorage không phải nguồn quyền truy cập chính thức.
 

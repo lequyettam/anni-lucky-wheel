@@ -167,13 +167,32 @@ export class GameService {
     return this.repository.transaction(state => { const user = state.users.find(u => u.id === userId); if (!user) throw new RuleError('Không tìm thấy tài khoản.'); user.name = name; return user; });
   }
   async redeem(input, employee = 'Thu ngân demo') {
+    return this.#redeemVoucher(input, {type:'staff', name:employee});
+  }
+  async useVoucher(userId, input) {
+    return this.#redeemVoucher(input, {type:'customer', userId});
+  }
+  // Both entry points commit the same one-way transition and audit record atomically.
+  // In production the server must derive the actor from an authenticated session.
+  async #redeemVoucher(input, actor) {
     return this.repository.transaction(state => {
-      const voucher = state.vouchers.find(v => v.code === input.trim().toUpperCase());
+      const now = this.clock();
+      const customer = actor.type === 'customer' ? state.users.find(u => u.id === actor.userId) : null;
+      if (actor.type === 'customer' && !customer) throw new RuleError('Vui lòng đăng nhập để sử dụng voucher.');
+      const voucher = state.vouchers.find(v => v.code === String(input ?? '').trim().toUpperCase());
       if (!voucher) throw new RuleError('Không tìm thấy voucher.');
+      if (customer && voucher.userId !== customer.id) throw new RuleError('Bạn chỉ có thể sử dụng voucher trong ví của mình.');
       if (voucher.redeemedAt) throw new RuleError('Voucher đã được sử dụng.');
-      if (+new Date(voucher.expiresAt) <= +this.clock()) throw new RuleError('Voucher đã hết hạn.');
-      voucher.redeemedAt = this.clock().toISOString(); voucher.redeemedBy = employee;
-      state.redemptions.push({voucherId:voucher.id, at:voucher.redeemedAt, employee, branch:voucher.branch}); return voucher;
+      if (+new Date(voucher.expiresAt) <= +now) throw new RuleError('Voucher đã hết hạn.');
+      const name = customer ? (customer.name || 'Khách hàng') : String(actor.name).trim();
+      if (!name) throw new RuleError('Vui lòng xác định nhân viên xác nhận voucher.');
+      voucher.redeemedAt = now.toISOString();
+      voucher.redeemedBy = name;
+      voucher.redeemedByType = actor.type;
+      voucher.redeemedById = customer?.id || null;
+      state.redemptions.push({voucherId:voucher.id, at:voucher.redeemedAt, actorType:actor.type,
+        actorId:voucher.redeemedById, actorName:name, employee:customer ? null : name, branch:voucher.branch});
+      return voucher;
     });
   }
   async savePrizes(prizes) { validatePrizes(prizes); return this.repository.transaction(state => {state.prizes = clone(prizes); return true;}); }

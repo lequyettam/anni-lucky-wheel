@@ -1,6 +1,8 @@
 # ANNI COFFEE · Vòng quay may mắn
 
-Bản demo 0.1 để duyệt giao diện và quy trình. Quà mẫu không có giá trị sử dụng.
+Bản demo 0.2 để duyệt giao diện và quy trình. Quà mẫu không có giá trị sử dụng.
+
+Chơi thử: https://lequyettam.github.io/anni-lucky-wheel/
 
 ## Chạy thử
 
@@ -17,7 +19,8 @@ Bản demo 0.1 để duyệt giao diện và quy trình. Quà mẫu không có g
 - Quà có tên, tên ngắn, ảnh, màu, biểu tượng, điều kiện, hạn dùng, tồn kho, tỷ lệ.
 - Tổng tỷ lệ gốc đúng 100%; chia lại phần hết hàng cho các ô còn hiệu lực có tỷ lệ gốc > 1%, bao gồm ô không trúng. 0% bị tắt.
 - Chế độ chia đều hoặc ngẫu nhiên có trọng số; nếu không phân bổ được thì tạm dừng và không mất lượt.
-- Ví voucher, lưu tên, mã khôi phục; báo cáo có lọc và xuất CSV; nhân viên nhập mã để xác nhận đổi một lần.
+- Ví voucher, lưu tên, mã khôi phục; khách tự xác nhận sử dụng tại quầy; nhân viên có thể đánh dấu trực tiếp trong danh sách trúng hoặc tra cứu mã.
+- Hai cách xác nhận dùng chung trạng thái: chỉ chuyển một lần sang “Đã sử dụng”, lưu người xác nhận, nguồn khách/nhân viên và thời gian; báo cáo có lọc và xuất CSV.
 - Giữ nguyên điều kiện voucher đã cấp khi sửa danh mục quà.
 
 ## Giới hạn demo
@@ -27,6 +30,15 @@ Dữ liệu lưu trong `localStorage` của trình duyệt, không phải máy c
 Mã chi nhánh trên mã cấp lượt hiện là nhãn đối soát, không xác minh hóa đơn hay vị trí cửa hàng. Tài khoản hiện chưa OTP. Voucher dùng mã văn bản tại quầy; camera quét QR sẽ bổ sung khi triển khai máy chủ.
 
 Kho lưu trữ và lịch sử Git không chứa dữ liệu người chơi, mã khôi phục hay phiên đăng nhập. Google Fonts là tùy chọn trang trí; nếu không tải được, app dùng font hệ thống.
+
+## Thử sử dụng voucher
+
+1. Khách vào **Quà của tôi → Sử dụng voucher**, kiểm tra điều kiện, bấm **Xác nhận sử dụng** tại quầy. Bấm **Để sau** sẽ giữ nguyên voucher.
+2. Voucher chuyển sang **Đã sử dụng**, hiển thị thời gian và người xác nhận; không còn nút dùng lại. Voucher hết hạn không thể sử dụng.
+3. Nếu khách quên bấm: nhân viên vào **Quản trị → Danh sách trúng → Đánh dấu đã sử dụng** ngay trên dòng voucher, kiểm tra khách/mã/quà rồi xác nhận. Hoặc nhập mã ở **Đổi voucher**.
+4. Trên cùng trình duyệt, khách và nhân viên dùng chung dữ liệu; các tab cùng nguồn cập nhật trạng thái qua sự kiện lưu trữ. Dữ liệu đã lưu từ bản 0.1 vẫn dùng được.
+
+Để điện thoại khách và laptop thu ngân cùng biết voucher đã dùng, cần triển khai máy chủ và cơ sở dữ liệu chung. Bản GitHub Pages chưa làm được việc đó; chống dùng lại trong demo chỉ có hiệu lực trong dữ liệu của trình duyệt hiện tại.
 
 ## Kiến trúc
 
