@@ -54,3 +54,12 @@ Chỉ chuyển cấu hình chiến dịch và danh mục quà đã duyệt. Khô
 ## Nghiệm thu trước vận hành thật
 
 Kiểm thử tích hợp API với MySQL thật: tranh chấp phần quà cuối, kích hoạt đồng thời mã gần hết quota, retry sau mất mạng, đổi voucher đồng thời tại hai quầy, giới hạn ngày VN và hết hạn. Kiểm tra trên điện thoại thật, điều kiện mạng yếu, quyền truy cập từng vai trò và phục hồi bản sao lưu. Các kiểm thử unit của demo chưa chứng minh an toàn hệ thống nhiều thiết bị.
+
+
+## Chủ đề giao diện
+
+`settings.appearance = {theme, decorations}` là cấu hình trình bày riêng. `GameService.saveAppearance` kiểm tra ID từ danh mục tĩnh và chỉ ghi trường này trong transaction. `saveSettings` không nhận ghi đè appearance từ bản chụp cấu hình chiến dịch cũ. Dữ liệu chưa có appearance dùng ANNI nguyên bản; không cần reset/migration.
+
+`themes.js` chứa preset và hàm tạo bản sao màu cho renderer. Không đổi dữ liệu prizes, thứ tự ô, trọng số, RNG, stock hoặc snapshot voucher. Admin chọn bản nháp trong controller; chỉ gọi lưu khi áp dụng. Xem trước dùng cùng `WheelRenderer` và bảng token CSS với trang khách. CSS mặc định trong quản trị luôn trung tính; các ô preview tự đặt theme riêng.
+
+Ở bản máy chủ, lưu appearance theo Campaign, trả trong GET /api/campaign, chỉ admin được sửa và ghi audit. Thông báo/poll cấu hình ở client để các thiết bị cập nhật. Không ghi lựa chọn theme của một trình duyệt vào mã nguồn GitHub để giả lập cấu hình chung.

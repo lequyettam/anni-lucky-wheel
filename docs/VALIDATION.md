@@ -1,6 +1,14 @@
-# Kiểm tra bản demo 0.3
+# Kiểm tra bản demo 0.4
 
 Ngày: 26/10/2026.
+
+## Chủ đề theo mùa 0.4
+
+- 35/35 kiểm thử đạt. Năm kiểm thử bổ sung: cấu hình cũ/ID không biết dùng ANNI mặc định mà không sửa dữ liệu; áp dụng và tải lại cả bốn theme không đổi tồn/quota/voucher/lịch sử dùng; đầu vào sai không ghi dữ liệu; lưu thiết lập chiến dịch cũ không ghi đè theme mới; bảng màu 2–12 ô giữ thứ tự và toàn bộ trường nghiệp vụ, trả lại màu tùy chỉnh khi chọn ANNI.
+- Kiểm tra quản trị desktop: bốn thẻ theme, xem trước chưa áp dụng, hủy bản nháp, bật/tắt họa tiết, áp dụng và tải lại vẫn giữ theme/tùy chọn. Khi thử Giáng sinh ở bản nháp, tab khách vẫn dùng Halloween cho đến khi bấm áp dụng.
+- Kiểm tra giao diện khách bằng iframe 390×740 và 320×568, giữ hai nguồn lượt để kiểm tra chiều cao thanh dưới. Theo dõi đổi theme giữa hai tab cùng nguồn; nội dung, màu và họa tiết cập nhật. Không tràn ngang, vòng quay và chú thích không bị thanh dưới che.
+- Đóng gói bản HTML độc lập từ cùng nguồn, kiểm tra cú pháp và chạy trong trình duyệt. Các trang phục vụ QA được loại khỏi `dist` trước triển khai.
+- Họa tiết là SVG tĩnh; hiệu ứng trúng thưởng giữ tùy chọn giảm chuyển động của hệ điều hành. Chưa kiểm tra trên thiết bị di động thật.
 
 ## Cập nhật mobile 0.3
 

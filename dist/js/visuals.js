@@ -1,5 +1,9 @@
 export const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const paths = {
+  pumpkin:'M12 7c-7-5-12 2-9 9 2 5 6 6 9 4 3 2 7 1 9-4 3-7-2-14-9-9ZM12 7c-4 1-5 9-2 13m2-13c4 1 5 9 2 13M12 7V3l3-2M7 12l1-1 1 1m6 0 1-1 1 1M8 16q4 4 8 0',
+  moon:'M20 15A9 9 0 0 1 9 3a9 9 0 1 0 11 12ZM18 2v4m-2-2h4m1 5v2m-1-1h2',
+  snowflake:'M12 2v20M3.3 7l17.4 10M3.3 17 20.7 7M9 4l3 3 3-3M9 20l3-3 3 3M3.5 10l4-1-1-4M20.5 14l-4 1 1 4M6.5 19l1-4-4-1M17.5 5l-1 4 4 1',
+  firework:'M12 2v4m0 12v4M2 12h4m12 0h4M5 5l3 3m8 8 3 3M5 19l3-3m8-8 3-3M9 1l1 2m4 18 1 2M1 15l2-1m18-4 2-1M12 10v4m-2-2h4',
   arrow:'M5 12h14m-6-6 6 6-6 6', chevron:'m9 5 7 7-7 7', close:'m6 6 12 12M6 18 18 6', check:'m5 12 4 4L19 6', plus:'M12 5v14M5 12h14',
   cup:'M5 8h12v8a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V8Zm12 1h2a3 3 0 0 1 0 6h-2M8 2v3m4-3v3m4-3v3',
   gift:'M3 8h18v4H3zM5 12v9h14v-9M12 8v13M12 8H8a3 3 0 1 1 3-3l1 3Zm0 0h4a3 3 0 1 0-3-3l-1 3Z',
@@ -68,9 +72,9 @@ export class SoundController {
   win() { [523.25,659.25,783.99,1046.5].forEach((f,i)=>this.tone(f,.3,.05,i*.12)); }
   toggle(){this.enabled=!this.enabled;localStorage.setItem('anni-sound',this.enabled?'on':'off');return this.enabled;}
 }
-export function confetti() {
+export function confetti(colors = ['#B79859','#315645','#D6A18A','#E9D5AD']) {
   if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const layer=document.createElement('div');layer.className='confetti';layer.setAttribute('aria-hidden','true');
-  for(let i=0;i<70;i++){const e=document.createElement('i');e.style.cssText=`--x:${Math.random()*100}vw;--delay:${Math.random()*.65}s;--drift:${Math.random()*220-110}px;--rotate:${Math.random()*720}deg;background:${['#B79859','#315645','#D6A18A','#E9D5AD'][i%4]}`;layer.append(e);}
+  for(let i=0;i<70;i++){const e=document.createElement('i');e.style.cssText=`--x:${Math.random()*100}vw;--delay:${Math.random()*.65}s;--drift:${Math.random()*220-110}px;--rotate:${Math.random()*720}deg;background:${colors[i%colors.length]}`;layer.append(e);}
   document.body.append(layer);setTimeout(()=>layer.remove(),4500);
 }

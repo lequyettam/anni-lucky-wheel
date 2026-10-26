@@ -1,3 +1,4 @@
+import {isThemeId} from './themes.js';
 /** Business rules. No DOM or browser storage dependencies. Percentages use basis points. */
 export class RuleError extends Error {}
 export const clone = value => structuredClone(value);
@@ -78,7 +79,7 @@ export function createSeed(now = new Date()) {
   const days = n => new Date(+new Date(now) + n * 86400000).toISOString();
   return {
     version:1,
-    settings:{title:'Vòng quay may mắn', dailyFree:1, active:true, mode:'weighted', start:'', end:'', branch:'ANNI COFFEE', codeHint:'ANNI2026'},
+    settings:{title:'Vòng quay may mắn', dailyFree:1, active:true, mode:'weighted', start:'', end:'', branch:'ANNI COFFEE', codeHint:'ANNI2026', appearance:{theme:'anni',decorations:true}},
     prizes:[
       {id:'luck', name:'Chúc bạn may mắn lần sau', short:'Hẹn lần sau', kind:'lose', weight:4000, stock:null, days:7, color:'#294D40', icon:'leaf', terms:'Một chút hồi hộp, một niềm vui nhỏ. Hẹn bạn ở lượt quay tiếp theo!', image:''},
       {id:'off10', name:'Voucher giảm 10%', short:'Giảm 10%', kind:'percent', weight:2500, stock:100, days:7, color:'#F1DFC1', icon:'ticket', terms:'Quà mẫu: giảm tối đa 20.000đ cho đơn từ 100.000đ. Không cộng dồn ưu đãi.', image:''},
@@ -196,12 +197,18 @@ export class GameService {
     });
   }
   async savePrizes(prizes) { validatePrizes(prizes); return this.repository.transaction(state => {state.prizes = clone(prizes); return true;}); }
+  async saveAppearance(appearance) {
+    if(!appearance || !isThemeId(appearance.theme) || typeof appearance.decorations!=='boolean') throw new RuleError('Vui lòng chọn một chủ đề hợp lệ.');
+    const saved={theme:appearance.theme,decorations:appearance.decorations};
+    return this.repository.transaction(state=>{state.settings.appearance=saved;return saved;});
+  }
   async saveSettings(settings) {
     const dailyFree = integer(settings.dailyFree, 'Lượt miễn phí', 0, 100);
     if (!['weighted','uniform'].includes(settings.mode)) throw new RuleError('Chế độ chọn kết quả không hợp lệ.');
     if (settings.start && settings.end && +new Date(settings.start) >= +new Date(settings.end)) throw new RuleError('Thời gian kết thúc phải sau thời gian bắt đầu.');
     if (!settings.title.trim() || !settings.branch.trim()) throw new RuleError('Vui lòng nhập tên chiến dịch và cửa hàng.');
-    return this.repository.transaction(state => {state.settings = {...state.settings, ...settings, dailyFree}; return true;});
+    const updates={...settings};delete updates.appearance;
+    return this.repository.transaction(state => {state.settings = {...state.settings, ...updates, dailyFree}; return true;});
   }
   async saveCode(data) {
     const entry = {...data, code:data.code.trim().toUpperCase()};
