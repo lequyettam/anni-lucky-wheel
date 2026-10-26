@@ -1,6 +1,6 @@
 # ANNI COFFEE · Vòng quay may mắn
 
-Bản demo 0.2 để duyệt giao diện và quy trình. Quà mẫu không có giá trị sử dụng.
+Bản demo 0.3 để duyệt giao diện và quy trình. Quà mẫu không có giá trị sử dụng.
 
 Chơi thử: https://lequyettam.github.io/anni-lucky-wheel/
 
@@ -9,7 +9,15 @@ Chơi thử: https://lequyettam.github.io/anni-lucky-wheel/
 - Mở bản `ANNI-COFFEE-Demo.html` trong Chrome, Edge hoặc Safari. Bản này được sinh tự động từ cùng mã nguồn, không phải một bản code riêng.
 - Hoặc phục vụ thư mục `dist` bằng máy chủ tĩnh. Ví dụ: `python3 -m http.server 8080 --directory dist`, rồi mở `http://localhost:8080`.
 - Số mẫu: `0900000001`. Mã cấp lượt mẫu: `ANNI2026` (2 lượt, mỗi SĐT 1 lần).
-- Nút **Quản trị demo** mở tất cả thiết lập. Chưa có xác thực nhân viên thật.
+- Trên laptop, nút **Quản trị demo** mở tất cả thiết lập. Trên điện thoại, nhân viên dùng đường dẫn `/#admin` (GitHub Pages: https://lequyettam.github.io/anni-lucky-wheel/#admin). Chưa có xác thực nhân viên thật.
+
+## Giao diện mobile 0.3
+
+- Mở trang là thấy vòng quay với tiêu đề gọn; ẩn phần giới thiệu dài và thẻ lượt quay trùng thao tác trên màn hình rộng tối đa 800px.
+- Thanh dưới có một nút quay, số lượt của nguồn đang chọn và nút **Nhập mã** có nhãn rõ ràng. Có cả hai nguồn thì hiện hai nút chọn; nguồn đang chọn hết lượt thì tự chọn nguồn còn lượt, không tự tiêu hao lượt.
+- Hết lượt hoặc tạm dừng: nút quay bị khóa, vẫn nhập mã được. Khách có thể mở **Vòng quay / Quà của tôi / Thể lệ / Tài khoản** từ điều hướng dưới.
+- Kích thước vòng quay và khoảng trống dưới nội dung dựa trên chiều cao màn hình, chiều cao thực của thanh điều khiển và vùng an toàn thiết bị. Màn hình quá thấp vẫn cho cuộn nội dung.
+- Quà mẫu nằm phía dưới màn hình chơi; nhãn trang trí không che các ô thưởng. Giao diện laptop giữ bố cục đầy đủ.
 
 ## Tính năng
 

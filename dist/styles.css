@@ -7,9 +7,62 @@
 @media(max-width:480px){.shell{padding:0 18px}.wordmark strong{font-size:24px}.wordmark small{font-size:6px}.brand-mark{width:29px;height:35px;font-size:23px}.profile{padding:9px;border-radius:50%;width:35px;height:35px}.profile span{display:none}.header-right{gap:12px}.demo-bar{font-size:8px;padding:7px 8px}.hero{padding-top:25px}.hero h1{font-size:36px;max-width:350px;justify-self:center}.hero-description{font-size:11px;max-width:310px}.wheel-stage{padding:24px 9px 7px;margin-top:7px}.wheel-wrap{padding:9px}.wheel-hub strong{font-size:20px;letter-spacing:2px}.wheel-hub small{font-size:5px;letter-spacing:2px}.floating-label{right:-4px;font-size:8px;padding:9px;top:12%}.floating-label .icon{width:17px}.floating-label strong{font-size:10px}.floating-star svg{width:25px;height:25px}.sound-toggle{width:33px;height:33px;right:2px;bottom:1px}.play-card-top strong{font-size:20px}.play-card{padding:15px;margin-top:12px}.section-line .text-button{font-size:10px}.section-line h2{font-size:24px}.wallet-grid{grid-template-columns:1fr}.page-heading{flex-wrap:wrap}.page-heading h1{font-size:34px}.fields,.dialog.wide .fields{grid-template-columns:1fr}.field.full{grid-column:auto}.tabs{overflow:auto}.tabs button{white-space:nowrap}.form-actions .btn{padding:11px 14px}.redeem-form{flex-direction:column}.panel-title{flex-wrap:wrap}.chart-row{grid-template-columns:110px 1fr 30px;gap:8px}.table-name{min-width:150px}.source-switch button{font-size:10px}.wheel-caption{font-size:9px}.secret-code{font-size:13px}.voucher-code{font-size:21px}.footer-links{gap:12px}.dialog-body{padding:27px 20px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.confetti{display:none}}
 
-.mobile-play-actions{display:none}
-@media(max-width:800px){.hero h1 br{display:block}.mobile-play-actions{display:flex;position:fixed;bottom:calc(62px + env(safe-area-inset-bottom));left:0;right:0;padding:12px 18px;background:linear-gradient(transparent,#f7f3ea 25%);z-index:25;gap:9px}.mobile-play-actions .btn:first-child{flex:1;height:49px;justify-content:space-between;box-shadow:0 6px 20px #294d4020}.mobile-play-actions .btn.secondary{width:49px;height:49px;padding:0;background:var(--white)}.footer{margin-bottom:135px}.hero-description{font-size:12px}input:not([type=checkbox]),select,textarea{font-size:16px}.text-button{font-size:12px}}
-
 /* Voucher use: one confirmation shared by the wallet and staff screens. */
 .voucher-actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}.voucher-actions .btn{flex:1;min-height:44px;white-space:nowrap}.voucher-used .voucher-top{opacity:.75}.voucher-usage-note{display:flex;gap:9px;align-items:flex-start;font-size:11px;line-height:1.8;color:var(--green);margin-top:14px}.voucher-usage-note .icon{width:16px;flex-shrink:0;margin-top:3px}.redemption-meta{display:block;margin-top:6px;color:var(--muted);line-height:1.7}.redemption-receipt{display:flex;gap:12px;padding:17px;margin:18px 0;border:1px solid #cbd8c8;background:#edf2e9;border-radius:12px;color:var(--green)}.redemption-receipt>.icon{flex-shrink:0;width:22px}.redemption-receipt strong{font-size:13px}.redemption-receipt p{font-size:11px;line-height:1.8;margin:8px 0}.redemption-receipt small{font-size:10px}.used-code{color:var(--muted);background:#eeede7}.voucher-copy{width:100%;justify-content:center;margin:0 0 18px}.use-warning{font-size:12px;line-height:1.85;padding:15px;background:#f8efdc;border-radius:10px;color:#715d35;margin:16px 0}.use-actions .btn{min-height:46px}.use-actions{flex-wrap:wrap}.use-actions .btn:last-child{flex:1}.detail-row span:last-child{overflow-wrap:anywhere;min-width:0}
 @media(max-width:480px){.voucher-actions .btn{font-size:12px;padding:12px}.use-actions{flex-direction:column-reverse}.use-actions .btn{width:100%;font-size:13px}.redemption-receipt{padding:14px}}
+
+
+/* Mobile play surface: one visible set of controls, measured clear space for the dock. */
+.mobile-dock,.mobile-header-label,.mobile-play-title{display:none}
+@media(max-width:800px){
+  #app{--mobile-top-space:74px;--mobile-bottom-space:158px}
+  #app[data-view="customer"] .site-header{height:52px;gap:12px}
+  #app[data-view="customer"] .header-right{display:none}
+  #app[data-view="customer"] .brand-mark{display:none}
+  #app[data-view="customer"] .wordmark{flex-direction:row;align-items:baseline;gap:6px}
+  #app[data-view="customer"] .wordmark strong{font-size:23px;letter-spacing:2px}
+  #app[data-view="customer"] .wordmark small{font-size:8px;letter-spacing:1.5px;margin:0}
+  #app[data-view="customer"] .mobile-header-label{display:block;font-size:10px;color:var(--muted)}
+  .demo-bar{font-size:8px;line-height:1.4;padding:5px 8px;letter-spacing:0}
+  .hero{display:flex;flex-direction:column;justify-content:center;gap:8px;padding:12px 0;min-height:calc(100svh - var(--mobile-top-space) - var(--mobile-bottom-space))}
+  .hero-copy{display:none}
+  .hero .mobile-play-title{display:block;order:-1;font-size:23px;line-height:1.35;text-align:center;margin:0;max-width:none}
+  .hero .mobile-play-title em{font-style:normal;color:var(--green)}
+  .hero .wheel-stage{order:0;width:min(100%,440px,max(200px,calc(100svh - var(--mobile-top-space) - var(--mobile-bottom-space) - 100px)));max-width:none;margin:0;padding:14px 8px 44px}
+  .hero .wheel-stage:before{inset:5px 0 38px}
+  .hero .wheel-stage:after{inset:10px 4px 42px}
+  .hero .wheel-wrap{padding:9px;max-width:none}
+  .hero .wheel-hub strong{font-size:clamp(16px,5vw,24px);letter-spacing:2px}
+  .hero .wheel-hub small{font-size:5px;letter-spacing:2px}
+  .hero .wheel-caption{position:absolute;bottom:5px;left:2px;right:48px;margin:0;font-size:9px;line-height:1.6;text-align:left}
+  .hero .wheel-caption .icon{width:12px;margin-right:2px}
+  .hero .sound-toggle{right:0;bottom:0;width:44px;height:44px}
+  .hero .floating-label,.hero .floating-star{display:none}
+  .mobile-dock{display:block;position:fixed;bottom:0;left:0;right:0;z-index:25;background:#fffdf9f7;backdrop-filter:blur(14px);padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -8px 25px #34250e08}
+  .mobile-play-actions{padding:8px max(16px,env(safe-area-inset-right)) 10px max(16px,env(safe-area-inset-left));border-top:1px solid var(--line)}
+  .mobile-balance-hint{font-size:10px;color:var(--muted);text-align:center;line-height:18px;margin:0 0 7px}
+  .mobile-play-actions .source-switch{max-width:520px;margin:0 auto 7px;padding:3px;gap:6px}
+  .mobile-play-actions .source-switch button{min-height:44px;font-size:11px;padding:8px}
+  .mobile-action-row{display:flex;gap:8px;max-width:520px;margin:auto}
+  #mobile-spin-btn{flex:1;min-width:0;min-height:52px;padding:12px;font-size:12px;justify-content:space-between}
+  #mobile-spin-btn>.icon{width:19px;height:19px}
+  #mobile-spin-btn:disabled{opacity:1;background:#e8e8df;color:#737669}
+  .mobile-code-button{flex:0 0 76px;flex-direction:column;gap:4px;min-height:52px;padding:7px 6px!important;font-size:10px!important;background:var(--white)!important}
+  .mobile-code-button .icon{width:20px;height:20px}
+  .mobile-nav{position:static;height:60px;padding:0 max(12px,env(safe-area-inset-right)) 0 max(12px,env(safe-area-inset-left));background:transparent;backdrop-filter:none}
+  .mobile-nav a,.mobile-nav button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#7b7f72;font-size:10px;background:none;border:0;padding:7px 0;min-width:0}
+  .mobile-nav a.active{color:var(--green);font-weight:600}
+  .mobile-nav .icon{width:20px;height:20px}
+  .footer{margin-bottom:calc(var(--mobile-bottom-space) + 16px)}
+  .admin-main{padding-bottom:calc(var(--mobile-bottom-space) + 24px)}
+  #app[data-route="play"] .rewards-section{padding-top:24px}
+  input:not([type=checkbox]),select,textarea{font-size:16px}
+  .text-button{font-size:12px}
+  body:has(#app[data-route="play"]) #toast{bottom:calc(var(--mobile-toast-space,200px) + env(safe-area-inset-bottom))}
+}
+@media(max-width:360px){
+  .hero .mobile-play-title{font-size:20px}
+  #mobile-spin-btn{font-size:11px;padding:10px;gap:5px}
+  #mobile-spin-btn>.icon:last-child{display:none}
+  #app[data-view="customer"] .mobile-header-label{font-size:9px}
+}

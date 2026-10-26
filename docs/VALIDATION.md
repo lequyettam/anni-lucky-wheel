@@ -1,8 +1,17 @@
-# Kiểm tra bản demo 0.2
+# Kiểm tra bản demo 0.3
 
 Ngày: 26/10/2026.
 
-## Cập nhật sử dụng voucher
+## Cập nhật mobile 0.3
+
+- Kiểm tra bằng khung trình duyệt cùng nguồn ở 320×568, 360×640, 390×740, 412×760 và 768×1024: không tràn ngang, thẻ thao tác lớn ẩn, vòng quay và dòng chú thích nằm trên thanh điều khiển; không còn nhãn đè lên ô thưởng. Đối chiếu bố cục desktop 1363px vẫn đầy đủ.
+- Thử chọn lượt hóa đơn khi có cả hai nguồn, quay một lượt mẫu: chỉ số lượt hóa đơn giảm 2 → 1, lượt miễn phí giữ 1. Khi chỉ còn hóa đơn, tự chọn hóa đơn và ẩn nhóm chọn nguồn.
+- Hết lượt: nút quay khóa, nhập mã ANNI2026 từ nút mobile vẫn cộng 2 lượt và mở lại nút quay. Chiến dịch tạm dừng: hiển thị trạng thái và khóa quay.
+- Kiểm tra điều hướng Vòng quay / Quà của tôi / Thể lệ / Tài khoản; các hộp thoại dùng lại luồng hiện có.
+- 30/30 kiểm thử nghiệp vụ đạt; kiểm tra cú pháp mô-đun và bản HTML đóng gói đạt. Trang tạo dữ liệu QA chỉ dùng cục bộ, không đưa vào bản triển khai.
+- Kiểm tra responsive qua iframe, chưa kiểm tra trực tiếp trên iPhone/Android thật hoặc bàn phím ảo của thiết bị. Chưa xác nhận hành vi vùng an toàn trên thiết bị có tai thỏ.
+
+## Cập nhật sử dụng voucher 0.2
 
 - 30/30 kiểm thử nghiệp vụ tự động đạt (`npm test`). Bảy kiểm thử mới bao gồm: khách dùng voucher thuộc ví, chặn dùng lại từ cả hai luồng, khách chưa đăng nhập/sai chủ sở hữu, hết hạn đúng thời điểm, khách và thu ngân xác nhận đồng thời theo cả hai thứ tự, lưu trạng thái qua lần nạp repository và tương thích voucher đã dùng từ bản 0.1.
 - Kiểm tra giao diện 390px qua iframe cùng nguồn: nút Sử dụng voucher, hộp xác nhận, Để sau giữ nguyên trạng thái, xác nhận chuyển sang nhóm Đã sử dụng, biên nhận ghi người/thời gian, nút dùng lại bị khóa, voucher hết hạn bị khóa. Đây chưa phải kiểm thử iPhone/Android thật.
