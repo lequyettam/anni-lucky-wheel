@@ -1,5 +1,15 @@
 # Kiểm tra bản demo 0.4
 
+## Cập nhật lễ hội 0.5
+
+- 35/35 kiểm thử nghiệp vụ đạt; vòng lặp catalog kiểm tra tất cả tám theme giữ nguyên lượt, quà, voucher, lịch sử và thứ tự 2–12 ô.
+- Kiểm tra quản trị: tám thẻ có hình minh họa, preview bản nháp, áp dụng, bật/tắt hình nền; thay đổi đã lưu cập nhật tab chơi cùng nguồn.
+- Kiểm tra thực tế trong iframe 320×568, 360×640, 390×740 và 412×760. Cả hai nguồn lượt vẫn có chỗ; đã sửa khoảng trống ở màn hình thấp để chú thích nằm trên dock. Đã xem từng cảnh Halloween, Giáng sinh, năm mới, Tết, 30/4, 8/3, 20/11.
+- Quay thật ở giao diện Tết: dừng đúng ô giảm 10%, hiện thẻ nhận thưởng có cảnh Tết và nội dung voucher động, mở ví thấy voucher. Thông tin khôi phục và luồng lưu tên giữ nguyên.
+- Bản HTML độc lập mở thành công trong trình duyệt; ảnh lấy từ data URL nhúng và giải mã đủ 768×1152. Kiểm tra giao diện chơi laptop; sửa độ tương phản nút tài khoản trên nền tối.
+- Giới hạn: đây là kiểm tra trình duyệt/iframe, chưa phải kiểm tra iPhone hoặc Android thật; demo vẫn lưu dữ liệu cục bộ.
+
+
 Ngày: 26/10/2026.
 
 ## Chủ đề theo mùa 0.4

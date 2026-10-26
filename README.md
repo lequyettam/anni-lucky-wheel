@@ -1,6 +1,6 @@
 # ANNI COFFEE · Vòng quay may mắn
 
-Bản demo 0.4 để duyệt giao diện và quy trình. Quà mẫu không có giá trị sử dụng.
+Bản demo 0.5 để duyệt giao diện và quy trình. Quà mẫu không có giá trị sử dụng.
 
 Chơi thử: https://lequyettam.github.io/anni-lucky-wheel/
 
@@ -11,16 +11,16 @@ Chơi thử: https://lequyettam.github.io/anni-lucky-wheel/
 - Số mẫu: `0900000001`. Mã cấp lượt mẫu: `ANNI2026` (2 lượt, mỗi SĐT 1 lần).
 - Trên laptop, nút **Quản trị demo** mở tất cả thiết lập. Trên điện thoại, nhân viên dùng đường dẫn `/#admin` (GitHub Pages: https://lequyettam.github.io/anni-lucky-wheel/#admin). Chưa có xác thực nhân viên thật.
 
-## Chủ đề theo mùa 0.4
+## Chủ đề lễ hội 0.5
 
 Vào **Quản trị → Giao diện & chủ đề** (`#admin/themes`):
 
-1. Chọn **ANNI nguyên bản**, **Halloween**, **Giáng sinh** hoặc **Tết Dương lịch**.
-2. Xem màu vòng quay và lời chào trong khung điện thoại; bật/tắt **Hiện họa tiết lễ hội**.
+1. Chọn một trong tám chủ đề: **ANNI nguyên bản**, **Halloween**, **Giáng sinh**, **Tết Dương lịch**, **Tết Nguyên đán**, **Ngày Thống nhất 30/4**, **Quốc tế Phụ nữ 8/3**, **Ngày Nhà giáo 20/11**.
+2. Xem hình nền, vòng quay và lời chào trong khung điện thoại; bật/tắt **Hiện hình nền minh họa lễ hội**.
 3. Bấm **Áp dụng chủ đề** để lưu. **Hủy thay đổi** hoặc rời trang trước khi áp dụng sẽ bỏ bản nháp.
 4. Chọn **ANNI nguyên bản** để dùng lại màu phần thưởng đã cấu hình. Chủ đề lễ hội chỉ thay màu hiển thị, không ghi đè màu trong danh mục quà.
 
-Theme đổi nền, nút, màu vòng quay, lời chào, họa tiết tĩnh và màu hiệu ứng chúc mừng. Họa tiết không bắt tương tác hoặc che các ô thưởng. Không tự đổi theo lịch; không thay đổi tỷ lệ, tồn quà, lượt quay hoặc voucher đã cấp. Quản trị giữ giao diện trung tính để dễ thao tác.
+Mỗi lễ hội có cảnh minh họa riêng, bảng màu, tiêu đề, vòng quay viền ánh kim, nút quay và thẻ nhận thưởng theo chủ đề. Tết dùng mai, đào, bánh chưng/bánh tét và lì xì; 30/4 dùng cờ đỏ sao vàng và hoa sen; 8/3 là vườn hoa; 20/11 là góc sách tri ân. Hình nền không bắt tương tác. Tên quà, điều kiện, ảnh quà và kết quả vẫn lấy từ dữ liệu động. Ảnh WebP 768×1152 khoảng 88–130 KB mỗi chủ đề; trang chơi chỉ tải cảnh đang dùng, ảnh thẻ quản trị tải lười. Bản HTML đóng gói nhúng toàn bộ ảnh nên dùng được khi không có máy chủ ảnh. Không tự đổi theo lịch; không thay đổi tỷ lệ, tồn quà, lượt quay hoặc voucher đã cấp. Quản trị giữ giao diện trung tính để dễ thao tác.
 
 **Phạm vi demo:** cấu hình lưu trong trình duyệt hiện tại và cập nhật giữa các tab cùng nguồn khi không có thao tác/hộp thoại đang mở. Không áp dụng chung cho điện thoại của khách khác. Cần lưu cấu hình chiến dịch qua máy chủ để đồng bộ toàn bộ thiết bị.
 

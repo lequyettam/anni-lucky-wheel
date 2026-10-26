@@ -63,3 +63,9 @@ Kiểm thử tích hợp API với MySQL thật: tranh chấp phần quà cuối
 `themes.js` chứa preset và hàm tạo bản sao màu cho renderer. Không đổi dữ liệu prizes, thứ tự ô, trọng số, RNG, stock hoặc snapshot voucher. Admin chọn bản nháp trong controller; chỉ gọi lưu khi áp dụng. Xem trước dùng cùng `WheelRenderer` và bảng token CSS với trang khách. CSS mặc định trong quản trị luôn trung tính; các ô preview tự đặt theme riêng.
 
 Ở bản máy chủ, lưu appearance theo Campaign, trả trong GET /api/campaign, chỉ admin được sửa và ghi audit. Thông báo/poll cấu hình ở client để các thiết bị cập nhật. Không ghi lựa chọn theme của một trình duyệt vào mã nguồn GitHub để giả lập cấu hình chung.
+
+### Lớp minh họa lễ hội 0.5
+
+Danh mục preset chứa đường dẫn `scene` và nội dung theo từng dịp. `App.themeDecor` dựng ảnh trang trí, `wheelLights` dựng viền đèn tĩnh bên ngoài canvas. Chỉ canvas quay; không thay đổi phép tính góc dừng hoặc thứ tự ô. Cảnh nền và viền dùng chung ở trang chơi và preview quản trị. Màn hình nhận quà dùng scene theo theme, nhưng tên/ảnh/điều kiện từ snapshot giải thực tế. Các hộp thoại thao tác và khu quản trị giữ nền sáng. Không gắn năm, con giáp hay ngày dương lịch cố định cho Tết âm lịch.
+
+Ảnh WebP nằm trong `dist/assets/themes/`, được phục vụ cùng GitHub Pages, không phụ thuộc CDN ảnh. Script đóng gói nhúng dữ liệu ảnh vào catalog của bản HTML độc lập. Cấu hình và dữ liệu đã lưu từ 0.1–0.4 không cần xóa hoặc chuyển đổi.
