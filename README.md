@@ -1,2 +1,65 @@
-# anni-lucky-wheel
-Vòng quay may mắn ANNI COFFEE — bản demo
+# ANNI COFFEE · Vòng quay may mắn
+
+Bản demo 0.1 để duyệt giao diện và quy trình. Quà mẫu không có giá trị sử dụng.
+
+## Chạy thử
+
+- Mở bản `ANNI-COFFEE-Demo.html` trong Chrome, Edge hoặc Safari. Bản này được sinh tự động từ cùng mã nguồn, không phải một bản code riêng.
+- Hoặc phục vụ thư mục `dist` bằng máy chủ tĩnh. Ví dụ: `python3 -m http.server 8080 --directory dist`, rồi mở `http://localhost:8080`.
+- Số mẫu: `0900000001`. Mã cấp lượt mẫu: `ANNI2026` (2 lượt, mỗi SĐT 1 lần).
+- Nút **Quản trị demo** mở tất cả thiết lập. Chưa có xác thực nhân viên thật.
+
+## Tính năng
+
+- Vòng quay responsive, âm thanh tổng hợp, hiệu ứng chúc mừng, tắt âm và giảm chuyển động theo hệ điều hành.
+- Số lượt miễn phí hằng ngày; reset theo giờ Việt Nam.
+- Nhiều mã do quản trị tạo: hạn mã, giới hạn tổng, mỗi SĐT theo ngày/toàn kỳ, lượt mỗi lần và hạn dùng lượt.
+- Quà có tên, tên ngắn, ảnh, màu, biểu tượng, điều kiện, hạn dùng, tồn kho, tỷ lệ.
+- Tổng tỷ lệ gốc đúng 100%; chia lại phần hết hàng cho các ô còn hiệu lực có tỷ lệ gốc > 1%, bao gồm ô không trúng. 0% bị tắt.
+- Chế độ chia đều hoặc ngẫu nhiên có trọng số; nếu không phân bổ được thì tạm dừng và không mất lượt.
+- Ví voucher, lưu tên, mã khôi phục; báo cáo có lọc và xuất CSV; nhân viên nhập mã để xác nhận đổi một lần.
+- Giữ nguyên điều kiện voucher đã cấp khi sửa danh mục quà.
+
+## Giới hạn demo
+
+Dữ liệu lưu trong `localStorage` của trình duyệt, không phải máy chủ. Điện thoại và laptop không chia sẻ dữ liệu; mã khôi phục không thể khôi phục sau khi xóa dữ liệu trình duyệt. Code phía khách và quản trị demo có thể bị sửa. Không dùng để trao quà thật hay thu thập thông tin thật.
+
+Mã chi nhánh trên mã cấp lượt hiện là nhãn đối soát, không xác minh hóa đơn hay vị trí cửa hàng. Tài khoản hiện chưa OTP. Voucher dùng mã văn bản tại quầy; camera quét QR sẽ bổ sung khi triển khai máy chủ.
+
+Kho lưu trữ và lịch sử Git không chứa dữ liệu người chơi, mã khôi phục hay phiên đăng nhập. Google Fonts là tùy chọn trang trí; nếu không tải được, app dùng font hệ thống.
+
+## Kiến trúc
+
+- `dist/js/domain.js`: các lớp `GameService`, `ProbabilityPolicy`, `MemoryRepository`; hàm thuần kiểm tra dữ liệu, thời gian, tỷ lệ.
+- `dist/js/storage.js`: adapter `LocalRepository`, tuần tự hóa thao tác và dùng Web Locks khi trình duyệt hỗ trợ.
+- `dist/js/visuals.js`: `WheelRenderer`, `SoundController`, icon và định dạng.
+- `dist/js/app.js`: controller giao diện và các màn hình, không tự tính kết quả ngoài `GameService`.
+- `tests/domain.test.mjs`: kiểm thử nghiệp vụ.
+- `scripts/package.mjs`: sinh bản HTML độc lập từ các mô-đun.
+- `docs/ARCHITECTURE.md`: định hướng chuyển sang Laravel + MySQL.
+
+Dùng hướng đối tượng ở các thành phần có trách nhiệm/trạng thái; dùng hàm thuần cho tác vụ độc lập, dễ tái sử dụng. Không dùng kế thừa nhiều tầng hoặc một lớp cho mỗi hàm.
+
+## Kiểm tra và đóng gói
+
+Node.js 20 trở lên, không cần cài thư viện JavaScript:
+
+```bash
+npm test
+npm run package
+```
+
+## Đưa lên GitHub Pages
+
+1. Tạo repository cho bản demo. Với GitHub Free, repository dùng Pages cần công khai.
+2. Đưa toàn bộ mã nguồn vào nhánh `main`.
+3. Vào **Settings → Pages → Source: GitHub Actions**.
+4. Workflow `.github/workflows/pages.yml` chạy kiểm thử rồi xuất bản thư mục `dist`.
+5. Mở URL mà bước deploy trả về; không đoán URL nếu repository dùng tên hoặc miền khác.
+
+Chỉ dùng Pages làm bản trình diễn quà mẫu. Bản phục vụ khách thật cần backend và nơi lưu dữ liệu tập trung.
+
+## Tài liệu nền tảng
+
+- https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages
+- https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits
