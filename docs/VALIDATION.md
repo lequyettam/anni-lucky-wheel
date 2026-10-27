@@ -8,6 +8,7 @@
 - Tên thương hiệu trống bị chặn, hiện thông báo và giữ nội dung đang dùng. Bản nháp giữ nhóm và theme đang chọn sau khi lưu.
 - Kiểm tra responsive qua iframe 320×568 và 390×740: không tràn ngang, chú thích vòng quay trên dock; tâm vòng quay co chữ theo kích thước thực. Chưa kiểm tra trực tiếp trên điện thoại thật.
 - Bản HTML độc lập được đóng gói từ cùng nguồn, kiểm tra cú pháp và mở trong trình duyệt: trình biên tập tải được, lưu tên rồi khôi phục về ANNI COFFEE thành công. Các trang QA không đưa vào bản triển khai.
+- Bản GitHub Pages có mã phiên bản tài nguyên từ nội dung CSS/JS; toàn bộ import dùng chung mã để trình duyệt tải đồng bộ sau khi phát hành.
 
 ## Cập nhật lễ hội 0.5
 

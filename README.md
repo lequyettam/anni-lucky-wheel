@@ -87,6 +87,7 @@ Kho lưu trữ và lịch sử Git không chứa dữ liệu người chơi, mã
 - `dist/js/app.js`: controller giao diện và các màn hình, không tự tính kết quả ngoài `GameService`.
 - `tests/`: 44 kiểm thử nghiệp vụ, chủ đề, nội dung, phục hồi và tranh chấp lưu.
 - `scripts/package.mjs`: sinh bản HTML độc lập từ các mô-đun.
+- `scripts/prepare-pages.mjs`: tạo bản xuất bản `release/pages`, gắn cùng mã phiên bản theo nội dung cho CSS và mọi mô-đun JavaScript để tránh bộ nhớ đệm trộn mã cũ/mới.
 - `docs/ARCHITECTURE.md`: định hướng chuyển sang Laravel + MySQL.
 
 Dùng hướng đối tượng ở các thành phần có trách nhiệm/trạng thái; dùng hàm thuần cho tác vụ độc lập, dễ tái sử dụng. Không dùng kế thừa nhiều tầng hoặc một lớp cho mỗi hàm.
@@ -97,6 +98,7 @@ Node.js 20 trở lên, không cần cài thư viện JavaScript:
 
 ```bash
 npm test
+npm run build
 npm run package
 ```
 
@@ -105,7 +107,7 @@ npm run package
 1. Tạo repository cho bản demo. Với GitHub Free, repository dùng Pages cần công khai.
 2. Đưa toàn bộ mã nguồn vào nhánh `main`.
 3. Vào **Settings → Pages → Source: GitHub Actions**.
-4. Workflow `.github/workflows/pages.yml` chạy kiểm thử rồi xuất bản thư mục `dist`.
+4. Workflow `.github/workflows/pages.yml` chạy kiểm thử rồi đóng gói và xuất bản thư mục `release/pages`.
 5. Mở URL mà bước deploy trả về; không đoán URL nếu repository dùng tên hoặc miền khác.
 
 Chỉ dùng Pages làm bản trình diễn quà mẫu. Bản phục vụ khách thật cần backend và nơi lưu dữ liệu tập trung.
