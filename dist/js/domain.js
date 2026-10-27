@@ -1,4 +1,5 @@
 import {isThemeId} from './themes.js';
+import {getContent, validateContent, contentRevision} from './content.js';
 /** Business rules. No DOM or browser storage dependencies. Percentages use basis points. */
 export class RuleError extends Error {}
 export const clone = value => structuredClone(value);
@@ -207,8 +208,23 @@ export class GameService {
     if (!['weighted','uniform'].includes(settings.mode)) throw new RuleError('Chế độ chọn kết quả không hợp lệ.');
     if (settings.start && settings.end && +new Date(settings.start) >= +new Date(settings.end)) throw new RuleError('Thời gian kết thúc phải sau thời gian bắt đầu.');
     if (!settings.title.trim() || !settings.branch.trim()) throw new RuleError('Vui lòng nhập tên chiến dịch và cửa hàng.');
-    const updates={...settings};delete updates.appearance;
+    const updates={...settings};
+    for(const key of ['appearance','content','contentPrevious','contentRevision','contentUpdatedAt'])delete updates[key];
     return this.repository.transaction(state => {state.settings = {...state.settings, ...updates, dailyFree}; return true;});
+  }
+  async saveContent(content, expectedRevision) {
+    const checked=validateContent(content);
+    return this.repository.transaction(state=>{
+      const revision=contentRevision(state.settings);
+      if(expectedRevision!==revision)throw new RuleError('Nội dung đã được sửa ở tab khác. Hãy tải bản đang dùng trước khi lưu lại.');
+      const previous=getContent(state.settings);
+      if(JSON.stringify(previous)===JSON.stringify(checked))return revision;
+      state.settings.contentPrevious={content:previous,savedAt:state.settings.contentUpdatedAt||null};
+      state.settings.content=checked;
+      state.settings.contentRevision=revision+1;
+      state.settings.contentUpdatedAt=this.clock().toISOString();
+      return revision+1;
+    });
   }
   async saveCode(data) {
     const entry = {...data, code:data.code.trim().toUpperCase()};

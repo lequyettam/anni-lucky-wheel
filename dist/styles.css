@@ -286,3 +286,102 @@
   .hero.festival-hero .wheel-stage{padding:12px 8px 42px}
 }
 #app[data-festival="true"] .profile{color:var(--festival-text);border-color:#ffffff30;background:#ffffff05}
+
+/* Content editor and reusable identity: one saved presentation across all screens. */
+.brand{min-width:0;max-width:280px;flex-shrink:1}
+.brand-words{display:flex;flex-direction:column;line-height:1.15;min-width:0;overflow-wrap:anywhere}
+.brand-words strong{font-family:Georgia,serif;font-weight:400}
+.brand-words small{display:block}
+.brand .brand-words{max-width:210px}
+.brand .long-brand strong{font-size:19px;letter-spacing:1px}
+.brand-logo{width:48px;height:48px;object-fit:contain;flex-shrink:0;border-radius:8px;background:#fffcf4;padding:3px}
+.wheel-hub{container-type:inline-size}
+.wheel-hub>.brand-words{width:90%;max-height:85%;align-items:center;text-align:center;overflow:hidden}
+.hero .wheel-hub .brand-words strong,.theme-preview .wheel-hub .brand-words strong{max-width:100%;margin-left:0;font-size:clamp(8px,24cqw,25px);letter-spacing:.05em}
+.hero .wheel-hub .brand-words small,.theme-preview .wheel-hub .brand-words small{margin-left:0;font-size:clamp(3px,5.5cqw,6px);letter-spacing:.2em;margin-top:4px}
+.hero .wheel-hub .brand-words.long-brand strong,.theme-preview .wheel-hub .brand-words.long-brand strong{font-size:clamp(7px,16cqw,12px);letter-spacing:0;line-height:1.05}
+.hub-logo{width:72%;height:72%;object-fit:contain}
+.preview-identity{display:flex;align-items:center;gap:6px;min-width:0;max-width:65%;color:inherit}
+.preview-identity .brand-words strong{font-size:18px;letter-spacing:1px}
+.preview-identity .brand-words.long-brand strong{font-size:12px;letter-spacing:0}
+.preview-identity .brand-words small{font-size:6px;letter-spacing:1.5px;margin:3px 0 0}
+.preview-identity .brand-logo{width:30px;height:30px;padding:2px}
+.voucher-brand{display:flex!important;align-items:center;gap:6px;overflow-wrap:anywhere}
+.voucher-brand img{width:28px;height:28px;object-fit:contain;border-radius:5px;background:#fff9}
+.hero-description,.rules-layout p,.result-content .intro,.page-heading p,.content-preview-card p,.content-preview-copy p{white-space:pre-line;overflow-wrap:anywhere}
+.hero h1,.page-heading h1,.result h2,.theme-preview-title{overflow-wrap:anywhere}
+.content-intro{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:20px 0;font-size:12px;line-height:1.8;color:var(--muted)}
+.content-intro p{max-width:620px}
+.content-tabs{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:24px;background:#eeeade;padding:7px;border-radius:14px}
+.content-tabs button{display:flex;align-items:center;gap:6px;background:none;border:0;color:var(--muted);font-size:11px;padding:11px 12px;border-radius:9px;min-height:42px}
+.content-tabs .selected{background:var(--white);color:var(--green);box-shadow:0 2px 6px #1e332213}
+.content-tabs .icon{width:16px;height:16px}
+.content-workspace{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:24px;align-items:start}
+.content-fields{padding:24px;margin:0;min-width:0}
+.content-fields .panel-title{align-items:flex-start;gap:12px}
+.content-fields .panel-title h2{display:flex;align-items:center;gap:8px;font-size:16px}
+.content-fields .panel-title .text-button{font-size:10px;white-space:nowrap;padding:3px 0}
+.content-field{margin-top:20px}
+.content-field-label{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:7px}
+.content-field-label label{margin:0;font-size:12px}
+.content-field-label .text-button{font-size:10px;text-decoration:underline;text-underline-offset:3px;min-width:42px;min-height:28px;justify-content:flex-end}
+.content-field input,.content-field textarea{font-size:13px;line-height:1.8}
+.content-field textarea{resize:vertical}
+.content-field small{font-size:10px}
+.logo-editor{display:flex;gap:14px;border:1px dashed #c8cabb;border-radius:12px;background:#f6f5ed;padding:15px;margin-bottom:18px}
+.logo-sample{width:78px;height:78px;border-radius:12px;display:grid;place-items:center;background:#fff;border:1px solid var(--line);flex-shrink:0}
+.logo-sample img{width:90%;height:90%;object-fit:contain}
+.logo-sample>.icon{width:30px;height:30px;color:var(--green)}
+.logo-editor>div:last-child{min-width:0}
+.logo-editor label{display:block;font-size:12px;font-weight:600;margin-bottom:8px}
+.logo-editor input{max-width:100%;font-size:10px;padding:4px 0;background:none;border:0;height:auto}
+.logo-editor input::file-selector-button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:7px 8px;margin-right:5px;color:var(--green)}
+.logo-editor p{font-size:10px;color:var(--muted);line-height:1.7;margin:8px 0}
+.logo-editor .text-button{font-size:10px}
+.content-variables{display:flex;gap:9px;padding:15px;border-radius:10px;background:var(--green-light);font-size:10px;line-height:1.9;color:var(--green);margin-top:24px}
+.content-variables>.icon{flex-shrink:0;width:16px}
+.content-variables code{background:#fff8;border-radius:3px;padding:2px}
+.content-preview-panel{position:sticky;top:20px;min-width:0}
+.content-phone .theme-preview-title{font-size:23px}
+.content-phone .theme-preview-message{padding-bottom:35px}
+.content-phone .theme-preview-cta{overflow-wrap:anywhere}
+.content-preview-copy{padding:16px;border:1px solid var(--line);border-radius:12px;margin-top:12px;background:var(--white);font-size:11px;line-height:1.8}
+.content-preview-copy p{margin:5px 0;color:var(--muted)}
+.content-preview-copy small{font-size:9px;display:block;margin-top:12px;border-top:1px solid var(--line);padding-top:8px}
+.content-preview-card{background:var(--white);border:1px solid var(--line);border-radius:22px;padding:24px 20px;box-shadow:0 15px 30px #2036290c;max-height:70vh;overflow:auto;overflow-wrap:anywhere}
+.content-preview-card>.preview-identity{margin:0 0 25px;max-width:100%;color:var(--green)}
+.content-preview-card h2{font-size:30px;line-height:1.2;margin:10px 0 15px}
+.content-preview-card h3{font-size:20px;line-height:1.3;margin:20px 0 12px}
+.content-preview-card h4{font-size:13px;margin:20px 0 8px}
+.content-preview-card p{font-size:11px;line-height:1.9;color:var(--muted);margin:8px 0}
+.content-preview-card small{font-size:9px;color:var(--gold);letter-spacing:.5px}
+.content-sample-ticket{border:1px dashed var(--line);border-radius:14px;padding:20px 14px;margin:22px 0;background:var(--paper);display:flex;align-items:center;text-align:center;flex-direction:column;gap:10px}
+.content-sample-ticket>.icon{width:35px;height:35px;color:var(--green);margin-bottom:10px}
+.content-result-preview .theme-preview-cta{width:100%;justify-content:center;overflow-wrap:anywhere}
+.content-recovery{margin-top:22px;border-top:1px solid var(--line);padding-top:20px;display:flex;flex-direction:column;align-items:flex-start;gap:11px}
+.content-recovery>strong{display:flex;align-items:center;gap:7px;font-size:12px}
+.content-recovery p,.content-recovery small{font-size:10px;color:var(--muted);line-height:1.8}
+.content-recovery .text-button{font-size:11px}
+.content-save-bar{display:flex;align-items:center;justify-content:space-between;gap:15px;position:sticky;bottom:12px;background:var(--white);border:1px solid var(--line);border-radius:13px;padding:17px;margin-top:25px;box-shadow:0 -4px 24px #2a362410;z-index:8}
+.content-save-bar strong{font-size:12px;font-weight:600}
+.content-save-bar small{display:block;font-size:10px;line-height:1.7;color:var(--muted);margin-top:4px}
+.content-save-bar .form-actions{margin:0;flex-shrink:0;gap:8px}
+.content-save-bar .btn{font-size:11px;padding:12px 15px}
+#content-conflict{font-size:11px;color:#9e462d;margin-top:5px}
+.content-fields .hint{font-size:11px}
+@media(max-width:1100px){.content-workspace{grid-template-columns:minmax(0,1fr) 260px;gap:18px}.content-fields{padding:18px}.content-tabs button{font-size:10px;padding:9px}.logo-editor{flex-direction:column}.content-save-bar{flex-wrap:wrap}.content-save-bar .form-actions{margin-left:auto}}
+@media(max-width:800px){
+  .brand .brand-words{max-width:180px}
+  #app[data-view="customer"] .brand .brand-words{max-width:160px}
+  #app[data-view="customer"] .brand .long-brand strong{font-size:14px;letter-spacing:.4px;line-height:1.25}
+  #app[data-view="customer"] .brand-logo{width:34px;height:34px;padding:2px}
+  .mobile-header-label{min-width:0;max-width:46%;overflow-wrap:anywhere;text-align:right}
+  .mobile-nav a,.mobile-nav button{overflow-wrap:anywhere}
+  .hero .wheel-stage{width:min(100%,440px,max(200px,calc(100svh - var(--mobile-top-space) - var(--mobile-bottom-space) - var(--mobile-title-space,31px) - 69px)))}
+  .hero.festival-hero .wheel-stage{width:min(90%,400px,max(194px,calc(100svh - var(--mobile-top-space) - var(--mobile-bottom-space) - var(--mobile-title-space,50px) - 104px)))}
+  .content-intro{align-items:flex-start;flex-direction:column}
+  .content-tabs{gap:4px}
+  .content-save-bar{bottom:calc(72px + env(safe-area-inset-bottom))}
+  .content-fields .panel-title{flex-wrap:wrap}
+}
+@media(max-width:650px){.content-workspace{grid-template-columns:1fr}.content-preview-panel{position:static;max-width:350px;width:100%;justify-self:center}.logo-editor{flex-direction:row}.content-tabs button{font-size:11px}.content-save-bar .form-actions{width:100%}.content-save-bar .btn{flex:1;padding:11px 8px}.content-save-bar{padding:12px}.content-fields{padding:17px}.content-field input,.content-field textarea{font-size:16px}.content-preview-card{max-height:none}}

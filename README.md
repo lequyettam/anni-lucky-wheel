@@ -1,6 +1,6 @@
 # ANNI COFFEE · Vòng quay may mắn
 
-Bản demo 0.5 để duyệt giao diện và quy trình. Quà mẫu không có giá trị sử dụng.
+Bản demo 0.6 để duyệt giao diện và quy trình. Quà mẫu không có giá trị sử dụng.
 
 Chơi thử: https://lequyettam.github.io/anni-lucky-wheel/
 
@@ -10,6 +10,21 @@ Chơi thử: https://lequyettam.github.io/anni-lucky-wheel/
 - Hoặc phục vụ thư mục `dist` bằng máy chủ tĩnh. Ví dụ: `python3 -m http.server 8080 --directory dist`, rồi mở `http://localhost:8080`.
 - Số mẫu: `0900000001`. Mã cấp lượt mẫu: `ANNI2026` (2 lượt, mỗi SĐT 1 lần).
 - Trên laptop, nút **Quản trị demo** mở tất cả thiết lập. Trên điện thoại, nhân viên dùng đường dẫn `/#admin` (GitHub Pages: https://lequyettam.github.io/anni-lucky-wheel/#admin). Chưa có xác thực nhân viên thật.
+
+## Nội dung & thương hiệu 0.6
+
+Vào **Quản trị → Nội dung & thương hiệu** (`#admin/content`):
+
+1. Chọn nhóm **Thương hiệu**, **Lời chào theo theme**, **Trang chơi**, **Ví quà**, **Nhận thưởng** hoặc **Thể lệ**.
+2. Sửa tên, tên rút gọn, khẩu hiệu; tải logo PNG/JPG/WebP tối đa 2 MB. Logo được thu gọn theo tỷ lệ, cạnh dài tối đa 512px và tối đa 300 KB sau xử lý, giữ nền trong suốt. Logo xuất hiện trên đầu trang, tâm vòng quay, voucher và biểu tượng tab trình duyệt. Dùng **Dùng biểu trưng chữ** để bỏ logo.
+3. Sửa nội dung và xem trước ngay. Lời chào lưu riêng cho từng theme; chọn theme trong trình biên tập chỉ đổi bản xem trước. Muốn đổi theme đang dùng, vào **Giao diện & chủ đề**.
+4. Bấm **Lưu nội dung** để áp dụng. Bản nháp được giữ khi đổi nhóm hoặc chuyển màn hình trong ứng dụng; tải lại/đóng trang sẽ bỏ bản nháp sau cảnh báo của trình duyệt. **Tải bản đang dùng** bỏ các chỉnh sửa chưa lưu.
+
+Các nút **Về gốc** bên từng trường, **Về gốc nhóm này**, **Đưa tất cả nội dung về gốc** và **Lấy bản lưu trước** đều đưa nội dung vào bản nháp trước. Kiểm tra rồi bấm **Lưu nội dung**. Hệ thống giữ **một bản lưu trước**, gồm cả logo; lưu lại bản phục hồi cũng có thể quay lại phiên bản vừa thay thế. Không ảnh hưởng phần thưởng, tỷ lệ, lượt quay, tài khoản hoặc trạng thái voucher.
+
+Biến có sẵn: `{brand}`, `{shortBrand}`, `{customer}`, `{dailyFree}`. Nội dung hỗ trợ chữ và xuống dòng, không chèn mã HTML. Nên dùng tiêu đề ngắn trên điện thoại, tên rút gọn cho tâm vòng quay. Các thông báo trạng thái, lỗi và cảnh báo demo là nội dung hệ thống. Tên/điều kiện/ảnh phần thưởng sửa tại **Phần thưởng**; tên cửa hàng đổi quà tại **Thiết lập**. Điều kiện trên voucher đã cấp giữ nguyên.
+
+Cấu hình chỉ lưu trong trình duyệt hiện tại, đồng bộ giữa các tab cùng nguồn; **chưa áp dụng chung cho thiết bị của khách**. Nếu hai tab sửa cùng lúc, bản cũ bị chặn lưu và cần tải bản đang dùng. Không cần xóa dữ liệu demo cũ để sử dụng tính năng mới.
 
 ## Chủ đề lễ hội 0.5
 
@@ -64,11 +79,13 @@ Kho lưu trữ và lịch sử Git không chứa dữ liệu người chơi, mã
 ## Kiến trúc
 
 - `dist/js/themes.js`: danh mục chủ đề, tương thích cấu hình cũ và bản sao màu hiển thị; không có phụ thuộc DOM.
+- `dist/js/content.js`: danh mục nội dung gốc, kiểm tra dữ liệu, biến thương hiệu và tương thích cấu hình cũ.
+- `dist/js/content-editor.js`: lớp `ContentEditor` quản lý bản nháp, logo, xem trước và khôi phục.
 - `dist/js/domain.js`: các lớp `GameService`, `ProbabilityPolicy`, `MemoryRepository`; hàm thuần kiểm tra dữ liệu, thời gian, tỷ lệ.
 - `dist/js/storage.js`: adapter `LocalRepository`, tuần tự hóa thao tác và dùng Web Locks khi trình duyệt hỗ trợ.
 - `dist/js/visuals.js`: `WheelRenderer`, `SoundController`, icon và định dạng.
 - `dist/js/app.js`: controller giao diện và các màn hình, không tự tính kết quả ngoài `GameService`.
-- `tests/domain.test.mjs`: kiểm thử nghiệp vụ.
+- `tests/`: 44 kiểm thử nghiệp vụ, chủ đề, nội dung, phục hồi và tranh chấp lưu.
 - `scripts/package.mjs`: sinh bản HTML độc lập từ các mô-đun.
 - `docs/ARCHITECTURE.md`: định hướng chuyển sang Laravel + MySQL.
 

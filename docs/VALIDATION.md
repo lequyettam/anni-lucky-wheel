@@ -1,4 +1,13 @@
-# Kiểm tra bản demo 0.4
+# Kiểm tra bản demo 0.6
+
+## Nội dung & thương hiệu 0.6
+
+- 44/44 kiểm thử tự động đạt. Chín kiểm thử mới bao gồm tương thích nội dung cũ/tám theme, bảo toàn nghiệp vụ, phục hồi qua tải lại repository, tranh chấp revision, bản thiết lập cũ, dữ liệu/logo sai, bản nháp và reset theo phạm vi, escape HTML/biến một lượt, lỗi quota và lưu không thay đổi.
+- Kiểm tra trình duyệt: đổi tên/khẩu hiệu, tải logo WebP 768×1152 và thu gọn thành 341×512, sửa lời chào Halloween, lưu và cập nhật trang khách cùng nguồn. Bản nháp/reset chưa lưu không đổi header khách.
+- Kiểm tra phục hồi bản lưu trước lấy lại cả tên và logo; đưa tất cả về gốc trả logo chữ/nội dung gốc. Reset một trường giữ thay đổi ở trường khác; reset nhóm ví quà áp dụng đúng phạm vi. Tên ví đã sửa hiển thị ở trang, điều hướng và tiêu đề tab.
+- Tên thương hiệu trống bị chặn, hiện thông báo và giữ nội dung đang dùng. Bản nháp giữ nhóm và theme đang chọn sau khi lưu.
+- Kiểm tra responsive qua iframe 320×568 và 390×740: không tràn ngang, chú thích vòng quay trên dock; tâm vòng quay co chữ theo kích thước thực. Chưa kiểm tra trực tiếp trên điện thoại thật.
+- Bản HTML độc lập được đóng gói từ cùng nguồn, kiểm tra cú pháp và mở trong trình duyệt: trình biên tập tải được, lưu tên rồi khôi phục về ANNI COFFEE thành công. Các trang QA không đưa vào bản triển khai.
 
 ## Cập nhật lễ hội 0.5
 

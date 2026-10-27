@@ -69,3 +69,13 @@ Kiểm thử tích hợp API với MySQL thật: tranh chấp phần quà cuối
 Danh mục preset chứa đường dẫn `scene` và nội dung theo từng dịp. `App.themeDecor` dựng ảnh trang trí, `wheelLights` dựng viền đèn tĩnh bên ngoài canvas. Chỉ canvas quay; không thay đổi phép tính góc dừng hoặc thứ tự ô. Cảnh nền và viền dùng chung ở trang chơi và preview quản trị. Màn hình nhận quà dùng scene theo theme, nhưng tên/ảnh/điều kiện từ snapshot giải thực tế. Các hộp thoại thao tác và khu quản trị giữ nền sáng. Không gắn năm, con giáp hay ngày dương lịch cố định cho Tết âm lịch.
 
 Ảnh WebP nằm trong `dist/assets/themes/`, được phục vụ cùng GitHub Pages, không phụ thuộc CDN ảnh. Script đóng gói nhúng dữ liệu ảnh vào catalog của bản HTML độc lập. Cấu hình và dữ liệu đã lưu từ 0.1–0.4 không cần xóa hoặc chuyển đổi.
+
+## Nội dung & thương hiệu 0.6
+
+`content.js` cung cấp schema trình bày độc lập với nghiệp vụ: `brand`, `text`, `themes`. Dữ liệu cũ thiếu trường dùng nội dung gốc; không sửa seed, không cần migration và không reset localStorage. `ContentEditor` giữ bản nháp riêng, xem trước bằng cùng renderer và các token CSS. Mọi nội dung nhập được escape tại biên HTML; biến chỉ thay một lượt để tên khách không trở thành template lồng.
+
+`GameService.saveContent(content, expectedRevision)` kiểm tra danh sách trường cho phép và chỉ ghi nội dung trong transaction. Revision ngăn bản nháp cũ ghi đè bản mới. Một snapshot trước đó lưu trong `contentPrevious`; các thao tác phục hồi đưa snapshot/default vào bản nháp rồi dùng cùng luồng lưu. `saveSettings` bỏ qua các trường presentation và metadata để cấu hình chiến dịch từ tab cũ không ghi đè thương hiệu. Lỗi quota không thay đổi bản đang dùng. Không ghi đè prize/voucher snapshot khi đổi thương hiệu.
+
+Logo được đọc và mã hóa lại qua canvas trước khi lưu dưới dạng data URL PNG/JPEG/WebP. UI giới hạn tệp đầu vào 2 MB, tối đa 20 triệu điểm ảnh, cạnh dài 512px; validation giới hạn dữ liệu đã tối ưu 300 KB và kiểm tra định dạng. Không nhận SVG, HTML hoặc URL logo bên ngoài. Mỗi lần lưu có thể giữ thêm một logo trong lịch sử, cần tính dung lượng localStorage.
+
+Ở bản máy chủ: lưu nội dung theo Campaign và trả qua GET /api/campaign. Thêm API quản trị có phân quyền, kiểm tra revision/ETag, audit người sửa, lịch sử phiên bản và endpoint upload kiểm tra/giải mã ảnh phía máy chủ. Không dùng kiểm tra trình duyệt làm bảo vệ cho upload thật. Cấu hình máy chủ là nguồn chung cho điện thoại khách và laptop quản trị.
