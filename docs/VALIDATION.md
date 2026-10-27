@@ -1,4 +1,14 @@
-# Kiểm tra bản demo 0.6.2
+# Kiểm tra bản demo 0.7.0
+
+## Nhân viên & phân quyền 0.7.0
+
+- 66 kiểm thử: giữ 53 kiểm thử cũ và thêm 13 trường hợp về khởi tạo tài khoản, quyền mặc định/tùy chỉnh, chặn ghi, thu hồi/hết hạn phiên, mật khẩu, hạn chế đăng nhập, quản trị viên cuối cùng, stale edit, tranh chấp đổi quyền/xác nhận voucher, reset giữ nhân viên và escape dữ liệu.
+- Browser QA dùng dữ liệu và phiên mẫu riêng, không nhập tài khoản của chủ website: nhân viên chỉ thấy Voucher; mở trực tiếp Nội dung bị chặn; tìm bằng SĐT và xem chi tiết không có nút xác nhận; thu ngân xác nhận quà mẫu và thấy đúng tên người thao tác, không dùng lại.
+- Hai tab thử nghiệm: quản trị đổi thu ngân sang quyền xem khi hộp thoại voucher đang mở ở tab kia; phiên cũ kết thúc, hộp thoại đóng và hiện đăng nhập.
+- Quyền xem nội dung tùy chỉnh: chuyển được nhóm/theme xem trước, các trường và nút lưu bị khóa. Trình bày voucher kiểm tra ở 390px và 320px, không cuộn ngang toàn trang tại 320px. Trang quản trị kiểm tra trên laptop.
+- `npm run build` tạo asset version cho CSS và toàn bộ chuỗi import; `npm run package` và kiểm tra cú pháp bundle HTML độc lập.
+- Mọi tài khoản và voucher của browser QA là fixture tách khỏi dữ liệu demo gốc; các file QA không được đưa vào bản xuất bản.
+- Đây vẫn là mô phỏng localStorage, không phải kiểm chứng an toàn xác thực máy chủ hoặc dùng nhiều thiết bị. Đăng ký/đăng nhập/mật khẩu được kiểm thử ở service; browser QA không sử dụng credential thật.
 
 ## Hai phiên bản logo 0.6.2
 

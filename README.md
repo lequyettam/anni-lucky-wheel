@@ -11,6 +11,23 @@ Chơi thử: https://lequyettam.github.io/anni-lucky-wheel/
 - Số mẫu: `0900000001`. Mã cấp lượt mẫu: `ANNI2026` (2 lượt, mỗi SĐT 1 lần).
 - Trên laptop, nút **Quản trị demo** mở tất cả thiết lập. Trên điện thoại, nhân viên dùng đường dẫn `/#admin` (GitHub Pages: https://lequyettam.github.io/anni-lucky-wheel/#admin). Chưa có xác thực nhân viên thật.
 
+## Nhân viên & phân quyền 0.7.0
+
+Vào **Quản trị → Nhân viên & phân quyền** (`#admin/staff`). Lần đầu, tạo quản trị viên bằng tên, tên đăng nhập và mật khẩu riêng cho bản thử nghiệm (ít nhất 8 ký tự). Không có mật khẩu mặc định. Thao tác này giữ toàn bộ cấu hình, logo, lượt quay và voucher đã có.
+
+1. Bấm **Thêm nhân viên**, nhập thông tin và chọn nhóm mẫu: **Chỉ xem voucher**, **Thu ngân** hoặc **Quản trị viên**.
+2. Hai nhóm nhân viên mặc định chỉ mở trang **Voucher**. Chỉ xem được tìm theo tên/SĐT/mã và xem chi tiết; thu ngân được thêm quyền xác nhận sử dụng một lần. Không được sửa giá trị, hạn dùng hay phục hồi voucher đã dùng.
+3. Khi cần, cấp thêm quyền theo từng mục: **Không truy cập / Chỉ xem / Xem & chỉnh sửa**. Voucher tách quyền **Xác nhận sử dụng**, báo cáo tách quyền **Xuất CSV**. Cấp chỉnh sửa luôn gồm xem. Quản lý nhân viên và khôi phục dữ liệu chỉ dành cho quản trị viên.
+4. Bấm **Chỉnh sửa** trên tài khoản để đổi tên, quyền, đặt mật khẩu mới hoặc bỏ **Cho phép tài khoản đăng nhập** để khóa. Đổi mật khẩu/quyền/khóa sẽ kết thúc các phiên của tài khoản đó, kể cả tab đang mở. Không thể khóa hoặc hạ quyền quản trị viên hoạt động cuối cùng.
+5. **Nhật ký thao tác** ghi tài khoản thao tác, thời điểm, tài khoản được cập nhật và các xác nhận voucher. Ghi nhận tên/ID nhân viên từ phiên hiện tại, không nhập tay tên người xác nhận.
+6. Mỗi tab có phiên nhân viên riêng, tối đa 8 giờ; đăng xuất nhân viên không đăng xuất ví khách. Tài khoản nhân viên ở góc trên cho phép đổi mật khẩu bằng mật khẩu hiện tại và đăng xuất.
+
+Menu, trang qua đường dẫn trực tiếp, thao tác giao diện và các lệnh cập nhật trong service đều kiểm tra quyền. Mục chỉ xem cho phép chuyển nhóm nội dung/xem trước, khóa các trường và nút lưu. Tài khoản/quyền đổi ở tab khác được kiểm tra trước khi tiếp tục thao tác.
+
+**Phạm vi:** đây là mô phỏng phân quyền bằng dữ liệu trình duyệt, **không phải bảo mật phía máy chủ**. Tài khoản mới chỉ dùng trong cùng hồ sơ trình duyệt và cùng địa chỉ website; tạo trên laptop chưa đăng nhập được trên điện thoại khác. Không dùng mật khẩu thật của dịch vụ khác, dữ liệu khách thật hoặc quà thật. Xóa dữ liệu website sẽ mất cả tài khoản demo. Nếu quên mật khẩu, nhờ một quản trị viên khác đặt lại; bản demo không có luồng khôi phục quản trị viên duy nhất.
+
+Nút **Khôi phục dữ liệu mẫu** chỉ nạp lại dữ liệu game, giữ tài khoản/quyền và nhật ký nhân viên. Cần API + cơ sở dữ liệu tập trung để áp dụng quyền và chống dùng lại voucher giữa các thiết bị trong bản vận hành thật.
+
 ## Nội dung & thương hiệu 0.6
 
 Vào **Quản trị → Nội dung & thương hiệu** (`#admin/content`):
@@ -75,7 +92,7 @@ Kho lưu trữ và lịch sử Git không chứa dữ liệu người chơi, mã
 
 1. Khách vào **Quà của tôi → Sử dụng voucher**, kiểm tra điều kiện, bấm **Xác nhận sử dụng** tại quầy. Bấm **Để sau** sẽ giữ nguyên voucher.
 2. Voucher chuyển sang **Đã sử dụng**, hiển thị thời gian và người xác nhận; không còn nút dùng lại. Voucher hết hạn không thể sử dụng.
-3. Nếu khách quên bấm: nhân viên vào **Quản trị → Danh sách trúng → Đánh dấu đã sử dụng** ngay trên dòng voucher, kiểm tra khách/mã/quà rồi xác nhận. Hoặc nhập mã ở **Đổi voucher**.
+3. Nếu khách quên bấm: thu ngân đăng nhập vào **Voucher → Đã sử dụng** trên thẻ quà, kiểm tra khách/mã/quà rồi xác nhận. Hoặc nhập mã ở **Đổi voucher**.
 4. Trên cùng trình duyệt, khách và nhân viên dùng chung dữ liệu; các tab cùng nguồn cập nhật trạng thái qua sự kiện lưu trữ. Dữ liệu đã lưu từ bản 0.1 vẫn dùng được.
 
 Để điện thoại khách và laptop thu ngân cùng biết voucher đã dùng, cần triển khai máy chủ và cơ sở dữ liệu chung. Bản GitHub Pages chưa làm được việc đó; chống dùng lại trong demo chỉ có hiệu lực trong dữ liệu của trình duyệt hiện tại.
@@ -85,11 +102,14 @@ Kho lưu trữ và lịch sử Git không chứa dữ liệu người chơi, mã
 - `dist/js/themes.js`: danh mục chủ đề, tương thích cấu hình cũ và bản sao màu hiển thị; không có phụ thuộc DOM.
 - `dist/js/content.js`: danh mục nội dung gốc, kiểm tra dữ liệu, biến thương hiệu và tương thích cấu hình cũ.
 - `dist/js/content-editor.js`: lớp `ContentEditor` quản lý bản nháp, logo, xem trước và khôi phục.
+- `dist/js/access-policy.js`: danh mục quyền, nhóm mẫu, kiểm tra phiên và quyền cho route/action/form.
+- `dist/js/staff.js`: lớp `StaffService` quản lý tài khoản, phiên demo, thu hồi quyền và audit.
+- `dist/js/staff-ui.js`: giao diện đăng nhập, bảng nhân viên, cấp quyền và nhật ký.
 - `dist/js/domain.js`: các lớp `GameService`, `ProbabilityPolicy`, `MemoryRepository`; hàm thuần kiểm tra dữ liệu, thời gian, tỷ lệ.
 - `dist/js/storage.js`: adapter `LocalRepository`, tuần tự hóa thao tác và dùng Web Locks khi trình duyệt hỗ trợ.
 - `dist/js/visuals.js`: `WheelRenderer`, `SoundController`, icon và định dạng.
 - `dist/js/app.js`: controller giao diện và các màn hình, không tự tính kết quả ngoài `GameService`.
-- `tests/`: 53 kiểm thử nghiệp vụ, chủ đề, nội dung, phục hồi và tranh chấp lưu.
+- `tests/`: 66 kiểm thử nghiệp vụ, chủ đề, nội dung, phục hồi và tranh chấp lưu.
 - `scripts/package.mjs`: sinh bản HTML độc lập từ các mô-đun.
 - `scripts/prepare-pages.mjs`: tạo bản xuất bản `release/pages`, gắn cùng mã phiên bản theo nội dung cho CSS và mọi mô-đun JavaScript để tránh bộ nhớ đệm trộn mã cũ/mới.
 - `docs/ARCHITECTURE.md`: định hướng chuyển sang Laravel + MySQL.

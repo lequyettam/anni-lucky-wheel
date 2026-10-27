@@ -1,3 +1,4 @@
+import {requirePermission} from './access-policy.js';
 import {isThemeId} from './themes.js';
 import {getContent, validateContent, contentRevision} from './content.js';
 /** Business rules. No DOM or browser storage dependencies. Percentages use basis points. */
@@ -103,7 +104,7 @@ export class MemoryRepository {
   }
 }
 export class GameService {
-  constructor(repository, {clock = () => new Date(), random = randomUnit} = {}) { this.repository = repository; this.clock = clock; this.random = random; }
+  constructor(repository, {clock = () => new Date(), random = randomUnit, staffSession = () => null} = {}) { this.repository = repository; this.clock = clock; this.random = random; this.staffSession = staffSession; }
   snapshot() { return this.repository.read(); }
   async login(input, recovery = '') {
     const phone = normalizePhone(input), recoveryHash = recovery ? await digest(recovery.trim().toUpperCase()) : '';
@@ -168,8 +169,8 @@ export class GameService {
     const name = input.trim(); if (name.length < 2 || name.length > 80) throw new RuleError('Tên cần từ 2 đến 80 ký tự.');
     return this.repository.transaction(state => { const user = state.users.find(u => u.id === userId); if (!user) throw new RuleError('Không tìm thấy tài khoản.'); user.name = name; return user; });
   }
-  async redeem(input, employee = 'Thu ngân demo') {
-    return this.#redeemVoucher(input, {type:'staff', name:employee});
+  async redeem(input) {
+    return this.#redeemVoucher(input, {type:'staff'});
   }
   async useVoucher(userId, input) {
     return this.#redeemVoucher(input, {type:'customer', userId});
@@ -179,6 +180,7 @@ export class GameService {
   async #redeemVoucher(input, actor) {
     return this.repository.transaction(state => {
       const now = this.clock();
+      const staff = actor.type === 'staff' ? requirePermission(state,this.staffSession(),'vouchers.redeem',now) : null;
       const customer = actor.type === 'customer' ? state.users.find(u => u.id === actor.userId) : null;
       if (actor.type === 'customer' && !customer) throw new RuleError('Vui lòng đăng nhập để sử dụng voucher.');
       const voucher = state.vouchers.find(v => v.code === String(input ?? '').trim().toUpperCase());
@@ -186,22 +188,22 @@ export class GameService {
       if (customer && voucher.userId !== customer.id) throw new RuleError('Bạn chỉ có thể sử dụng voucher trong ví của mình.');
       if (voucher.redeemedAt) throw new RuleError('Voucher đã được sử dụng.');
       if (+new Date(voucher.expiresAt) <= +now) throw new RuleError('Voucher đã hết hạn.');
-      const name = customer ? (customer.name || 'Khách hàng') : String(actor.name).trim();
+      const name = customer ? (customer.name || 'Khách hàng') : staff.name;
       if (!name) throw new RuleError('Vui lòng xác định nhân viên xác nhận voucher.');
       voucher.redeemedAt = now.toISOString();
       voucher.redeemedBy = name;
       voucher.redeemedByType = actor.type;
-      voucher.redeemedById = customer?.id || null;
+      voucher.redeemedById = customer?.id || staff?.id || null;
       state.redemptions.push({voucherId:voucher.id, at:voucher.redeemedAt, actorType:actor.type,
         actorId:voucher.redeemedById, actorName:name, employee:customer ? null : name, branch:voucher.branch});
       return voucher;
     });
   }
-  async savePrizes(prizes) { validatePrizes(prizes); return this.repository.transaction(state => {state.prizes = clone(prizes); return true;}); }
+  async savePrizes(prizes) { validatePrizes(prizes); return this.repository.transaction(state => {requirePermission(state,this.staffSession(),'prizes.edit',this.clock());state.prizes = clone(prizes); return true;}); }
   async saveAppearance(appearance) {
     if(!appearance || !isThemeId(appearance.theme) || typeof appearance.decorations!=='boolean') throw new RuleError('Vui lòng chọn một chủ đề hợp lệ.');
     const saved={theme:appearance.theme,decorations:appearance.decorations};
-    return this.repository.transaction(state=>{state.settings.appearance=saved;return saved;});
+    return this.repository.transaction(state=>{requirePermission(state,this.staffSession(),'themes.edit',this.clock());state.settings.appearance=saved;return saved;});
   }
   async saveSettings(settings) {
     const dailyFree = integer(settings.dailyFree, 'Lượt miễn phí', 0, 100);
@@ -210,11 +212,12 @@ export class GameService {
     if (!settings.title.trim() || !settings.branch.trim()) throw new RuleError('Vui lòng nhập tên chiến dịch và cửa hàng.');
     const updates={...settings};
     for(const key of ['appearance','content','contentPrevious','contentRevision','contentUpdatedAt'])delete updates[key];
-    return this.repository.transaction(state => {state.settings = {...state.settings, ...updates, dailyFree}; return true;});
+    return this.repository.transaction(state => {requirePermission(state,this.staffSession(),'settings.edit',this.clock());state.settings = {...state.settings, ...updates, dailyFree}; return true;});
   }
   async saveContent(content, expectedRevision) {
     const checked=validateContent(content);
     return this.repository.transaction(state=>{
+      requirePermission(state,this.staffSession(),'content.edit',this.clock());
       const revision=contentRevision(state.settings);
       if(expectedRevision!==revision)throw new RuleError('Nội dung đã được sửa ở tab khác. Hãy tải bản đang dùng trước khi lưu lại.');
       const previous=getContent(state.settings);
@@ -233,6 +236,7 @@ export class GameService {
     if (!Number.isFinite(+new Date(entry.starts)) || !Number.isFinite(+new Date(entry.ends)) || +new Date(entry.starts) >= +new Date(entry.ends)) throw new RuleError('Chọn khoảng thời gian áp dụng hợp lệ.');
     if (!['all','day'].includes(entry.period)) throw new RuleError('Chu kỳ giới hạn không hợp lệ.');
     return this.repository.transaction(state => {
+      requirePermission(state,this.staffSession(),'codes.edit',this.clock());
       if (state.codes.some(c => c.code === entry.code && c.id !== entry.id)) throw new RuleError('Mã này đã tồn tại.');
       const index = state.codes.findIndex(c => c.id === entry.id), uses = index >= 0 ? state.codes[index].uses : [];
       if (index >= 0 && uses.length && state.codes[index].code !== entry.code) throw new RuleError('Mã đã có người sử dụng. Hãy tạo mã mới để đổi tên.');

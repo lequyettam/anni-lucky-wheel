@@ -87,3 +87,18 @@ Giữ `brand.logo` làm ảnh dùng trên nền sáng để dữ liệu 0.6/0.6.
 Theme có `logoSurface` cho vùng đầu trang chơi/preview. Controller truyền nền thực của vị trí: admin, wallet, rules, voucher và tâm vòng quay là sáng; đầu trang chơi lễ hội và preview lễ hội là tối. Tắt minh họa không đổi nền tối của trang. Ảnh không có lớp nền trắng hoặc bộ lọc đổi màu tự động. Favicon chọn theo `prefers-color-scheme`, cập nhật khi tùy chọn hệ thống đổi.
 
 Mỗi ô tải có token và trạng thái xử lý riêng. Tải ảnh ở ô này không hủy ảnh ở ô còn lại; xóa/reset/khôi phục hủy kết quả xử lý cũ để ảnh không xuất hiện lại. Không cho lưu khi còn ảnh đang xử lý. Giới hạn 300 KB áp dụng mỗi ảnh; bản lưu trước có thể giữ thêm hai ảnh, do đó xử lý lỗi quota vẫn phải giữ nguyên bản đang dùng.
+
+
+## Phân quyền mô phỏng 0.7.0
+
+Tách `access-policy.js` (hàm thuần), `StaffService` (tài khoản/phiên), `staff-ui.js` (render) và controller `App`. Policy khai báo whitelist cho module, route, action và form; mặc định từ chối quyền không biết. Các nhóm mẫu admin/viewer/cashier là điểm xuất phát; tài khoản không phải admin có thể được cấp thêm view/edit theo module, không tự cấp quyền staff.manage/data.reset.
+
+State mở rộng tùy chọn: `staff`, `staffSessions`, `staffAudit`, `staffAttempts`. Dữ liệu v1 cũ không cần reset; tạo quản trị viên lần đầu trong transaction có kiểm tra chưa có tài khoản, giữ dữ liệu game. Không commit tài khoản, voucher thử hay credential vào kho nguồn. Tài khoản khởi tạo không có mật khẩu mặc định.
+
+`GameService` nhận callback `staffSession` (mặc định trả null). Các lệnh savePrizes/saveCode/saveAppearance/saveContent/saveSettings và redeem kiểm tra actor + quyền bên trong transaction, không tin role/tên nhân viên từ UI. `useVoucher` của khách giữ luồng riêng và kiểm tra đúng ví. Đổi voucher lưu actorId/actorName cùng chuyển trạng thái; không có API chuyển đã dùng về chưa dùng. Các test nghiệp vụ cũ dùng fixture tài khoản/phiên có quyền trong `tests/support.mjs`, không có bypass mặc định trong mã ứng dụng.
+
+Phiên demo có token ngẫu nhiên, hết hạn sau 8 giờ, lưu token tab trong sessionStorage. Mỗi tài khoản có sessionVersion; sửa tài khoản/quyền/mật khẩu tăng version và xóa phiên đang tồn tại. Mỗi thao tác resolve tài khoản đang active và phiên chưa hết hạn từ state mới nhất. UI nhận storage event trước khi xử lý modal, bỏ nháp và trở về đăng nhập nếu phiên bị thu hồi. Khi ở quản trị, timer kiểm tra hết hạn mỗi 30 giây; transaction vẫn kiểm tra thời điểm thực của lệnh. Không khóa/hạ quyền quản trị viên hoạt động cuối cùng; revision chống ghi đè chỉnh sửa tài khoản đã cũ.
+
+Mật khẩu demo dùng SHA-256 có salt ngẫu nhiên và không lưu nguyên văn; đây **không phải** cơ chế lưu mật khẩu production. localStorage và JavaScript có thể bị sửa, snapshot chứa dữ liệu trình duyệt, audit không chống can thiệp, bộ đếm đăng nhập chỉ mô phỏng trên một trình duyệt. Không coi các lớp kiểm tra này là ranh giới bảo mật thật.
+
+Khi chuyển Laravel + MariaDB: lưu mật khẩu bằng Argon2id/bcrypt của framework, phiên phía máy chủ qua cookie HttpOnly/Secure, policy/middleware kiểm tra từng endpoint và đối tượng. API chỉ trả dữ liệu mà vai trò được phép đọc, không gửi toàn bộ kho mã/khách/tài khoản cho frontend. Quyền và actor lấy từ phiên phía máy chủ, rate limit phía máy chủ, bootstrap chỉ qua luồng cài đặt kín, audit và redemption cùng transaction. GitHub chỉ giữ nguồn/frontend; không dùng file nguồn hoặc localStorage để chia sẻ cấu hình/tài khoản giữa các thiết bị.

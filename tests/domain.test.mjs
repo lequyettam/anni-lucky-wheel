@@ -1,7 +1,8 @@
+import {GameService} from './support.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {GameService, MemoryRepository, ProbabilityPolicy, createSeed, validatePrizes, normalizePhone, basisPoints, sha256, vnDay} from '../dist/js/domain.js';
+import { MemoryRepository, ProbabilityPolicy, createSeed, validatePrizes, normalizePhone, basisPoints, sha256, vnDay} from '../dist/js/domain.js';
 import {LocalRepository} from '../dist/js/storage.js';
 const now = new Date('2026-10-26T05:00:00Z');
 async function setup(random=()=>.5,edit=()=>{}){const seed=createSeed(now);edit(seed);const repo=new MemoryRepository(seed);const game=new GameService(repo,{clock:()=>now,random});const user=await game.login('0900000001');return {repo,game,user};}
@@ -76,7 +77,7 @@ test('Both redemption paths reject vouchers exactly at expiry without a write',a
 test('Staff redemption blocks later customer use and preserves the employee receipt',async()=>{
   const {game,user}=await setup();
   const {voucher}=await game.spin(user.id,'free');
-  const used=await game.redeem(voucher.code,'Thu ngân A');
+  const used=await game.redeem(voucher.code);
   assert.equal(used.redeemedByType,'staff');
   assert.equal(used.redeemedBy,'Thu ngân A');
   assert.equal(game.snapshot().redemptions[0].employee,'Thu ngân A');
@@ -89,7 +90,7 @@ test('Racing customer and staff confirmations produce exactly one receipt in eit
   for(const first of ['customer','staff']){
     const {game,user}=await setup();
     const {voucher}=await game.spin(user.id,'free');
-    const customer=()=>game.useVoucher(user.id,voucher.code),staff=()=>game.redeem(voucher.code,'Thu ngân A');
+    const customer=()=>game.useVoucher(user.id,voucher.code),staff=()=>game.redeem(voucher.code);
     const calls=first==='customer'?[customer,staff,customer]:[staff,customer,staff];
     const results=await Promise.allSettled(calls.map(fn=>fn()));
     assert.equal(results.filter(r=>r.status==='fulfilled').length,1);

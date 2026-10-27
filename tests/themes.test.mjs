@@ -1,6 +1,7 @@
+import {GameService} from './support.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {GameService, MemoryRepository, createSeed} from '../dist/js/domain.js';
+import { MemoryRepository, createSeed} from '../dist/js/domain.js';
 import {LocalRepository} from '../dist/js/storage.js';
 import {THEMES, getAppearance, themedPrizes} from '../dist/js/themes.js';
 
