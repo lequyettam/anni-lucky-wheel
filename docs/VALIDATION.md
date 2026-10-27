@@ -1,4 +1,11 @@
-# Kiểm tra bản demo 0.6
+# Kiểm tra bản demo 0.6.1
+
+## Logo và tên thương hiệu 0.6.1
+
+- 47/47 kiểm thử đạt. Ba kiểm thử bổ sung bao gồm lưu/tải lại/khôi phục logo với tên trống, chặn bỏ cả tên lẫn logo và bảo toàn bản đang dùng, tương thích dữ liệu cũ, lời chào trung tính, tên rút gọn và escape nhãn ảnh.
+- Kiểm tra trình duyệt: xóa tên khi có logo và lưu thành công; tải lại vẫn chỉ có logo, tiêu đề tab không có dấu phân cách thừa. Bỏ logo khi tên trống bị chặn, logo đang dùng vẫn còn. Lấy bản lưu trước và về toàn bộ nội dung gốc hoạt động.
+- Đo tên cạnh logo: 18px trên laptop và 16px trên điện thoại. Kiểm tra iframe 390×740 và 320×568; không tràn ngang, chú thích nằm trên thanh điều khiển. Logo đứng riêng giữ tỷ lệ, không có khung chữ trống. Không kiểm tra trên thiết bị di động thật.
+- Bản HTML độc lập mở được với cấu hình chỉ logo. Đóng gói Pages dùng mã phiên bản mới cho tài nguyên; trang chuẩn bị dữ liệu QA không đưa lên GitHub.
 
 ## Nội dung & thương hiệu 0.6
 

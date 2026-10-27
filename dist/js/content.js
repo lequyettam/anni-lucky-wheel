@@ -47,7 +47,7 @@ export const CONTENT_GROUPS=Object.freeze([
   ]}
 ].map(group=>Object.freeze({...group,fields:Object.freeze(group.fields)})));
 export const BRAND_FIELDS=Object.freeze([
-  item('name','Tên thương hiệu','ANNI COFFEE',60),
+  item('name','Tên thương hiệu','ANNI COFFEE',60,{optional:true}),
   item('shortName','Tên rút gọn (tùy chọn)','',24,{optional:true}),
   item('slogan','Khẩu hiệu ở chân trang','Cà phê chất lượng từ vùng Tây Nguyên',180,{optional:true})
 ]);
@@ -82,6 +82,8 @@ export function getContent(settings){
   const merge=(target,source,fields)=>{for(const f of fields)if(own(source,f.key)&&typeof source[f.key]==='string'&&source[f.key].length<=f.max&&(f.optional||source[f.key].trim()))target[f.key]=source[f.key];};
   merge(defaults.brand,saved?.brand,BRAND_FIELDS);
   if(validLogo(saved?.brand?.logo))defaults.brand.logo=saved.brand.logo;
+  defaults.brand.name=defaults.brand.name.trim();
+  if(!defaults.brand.name&&!defaults.brand.logo)defaults.brand.name=BRAND_FIELDS.find(f=>f.key==='name').value;
   merge(defaults.text,saved?.text,CONTENT_GROUPS.flatMap(g=>g.fields));
   for(const theme of THEMES)merge(defaults.themes[theme.id],saved?.themes?.[theme.id],THEME_FIELDS);
   return defaults;
@@ -102,13 +104,20 @@ export function validateContent(value){
   checked.brand.name=checked.brand.name.trim();checked.brand.shortName=checked.brand.shortName.trim();
   if(!validLogo(value.brand.logo))throw new Error('Logo phải là ảnh PNG, JPG hoặc WebP hợp lệ, tối đa 300 KB sau tối ưu.');
   checked.brand.logo=value.brand.logo;
+  if(!checked.brand.name&&!checked.brand.logo)throw new Error('Nhập tên thương hiệu hoặc tải logo lên trước khi lưu.');
   check(value.text,checked.text,CONTENT_GROUPS.flatMap(g=>g.fields));
   for(const theme of THEMES)check(value.themes?.[theme.id],checked.themes[theme.id],THEME_FIELDS);
   return checked;
 }
 export function contentVariables(content,extra={}){
   const brand=content.brand;
-  return {brand:brand.name,shortBrand:brand.shortName||brand.name.replace(/\s+COFFEE$/i,'').trim(),customer:'bạn',dailyFree:1,...extra};
+  return {brand:brand.name||brand.shortName||'quán',shortBrand:brand.shortName||brand.name.replace(/\s+COFFEE$/i,'').trim()||'quán',customer:'bạn',dailyFree:1,...extra};
+}
+export function contentMessage(content,key,extra={}){
+  let value=content.text[key];
+  const originalLogin=CONTENT_GROUPS[0].fields.find(f=>f.key==='loginTitle').value;
+  if(key==='loginTitle'&&!content.brand.name&&!content.brand.shortName&&value===originalLogin)value='Chào bạn, mời bạn ghé chơi.';
+  return formatContent(value,contentVariables(content,extra));
 }
 /** One pass prevents text supplied in a name from becoming a second template. Escape at the HTML boundary. */
 export function formatContent(value,variables){return String(value).replace(/\{(brand|shortBrand|customer|dailyFree)\}/g,(_,key)=>String(variables[key]??''));}

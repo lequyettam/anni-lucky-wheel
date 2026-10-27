@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {GameService,MemoryRepository,createSeed} from '../dist/js/domain.js';
 import {LocalRepository} from '../dist/js/storage.js';
 import {THEMES} from '../dist/js/themes.js';
-import {getContent,defaultContent,contentRevision,contentTheme,contentVariables,formatContent,LOGO_MAX_BYTES} from '../dist/js/content.js';
+import {getContent,defaultContent,contentRevision,contentTheme,contentVariables,formatContent,contentMessage,validateContent,LOGO_MAX_BYTES} from '../dist/js/content.js';
 import {ContentEditor,brandMarkup} from '../dist/js/content-editor.js';
 const now=new Date('2026-10-27T05:00:00Z');
 const game=()=>new GameService(new MemoryRepository(createSeed(now)),{clock:()=>now,random:()=>.5});
@@ -89,4 +89,45 @@ test('No-op saves preserve the previous version; failed storage writes retain th
  const c=defaultContent();c.brand.name='Tên mới';await g.saveContent(c,0);const before=g.snapshot();
  await g.saveContent(c,1);assert.deepEqual(g.snapshot(),before);
  fail=true;c.brand.name='Không thể lưu';await assert.rejects(g.saveContent(c,1),/không lưu được/);assert.deepEqual(g.snapshot(),before);
+});
+
+
+test('Logo-only identity saves, reloads and restores without bringing back the default name',async()=>{
+ const memory=new Map(),storage={getItem:k=>memory.get(k)||null,setItem:(k,v)=>memory.set(k,v)};
+ const g=new GameService(new LocalRepository('logo-only',storage),{clock:()=>now});
+ const c=defaultContent();c.brand.logo=png;c.brand.name='   ';
+ await g.saveContent(c,0);
+ const reloaded=new GameService(new LocalRepository('logo-only',storage),{clock:()=>now});
+ const saved=getContent(reloaded.snapshot().settings);
+ assert.equal(saved.brand.name,'');assert.equal(saved.brand.logo,png);
+ assert.doesNotMatch(brandMarkup(saved),/brand-words|brand-mark|ANNI/);
+ assert.match(brandMarkup(saved),/is-solo/);assert.match(brandMarkup(saved),/alt="Logo thương hiệu"/);
+ await reloaded.saveContent(defaultContent(),1);
+ await reloaded.saveContent(reloaded.snapshot().settings.contentPrevious.content,2);
+ assert.equal(getContent(reloaded.snapshot().settings).brand.name,'');
+ assert.equal(getContent(reloaded.snapshot().settings).brand.logo,png);
+});
+
+test('Removing the only identity is rejected until a name is entered; legacy fallback stays readable',async()=>{
+ const g=game(),c=defaultContent();c.brand.logo=png;c.brand.name='';await g.saveContent(c,0);
+ const before=g.snapshot();c.brand.logo='';
+ await assert.rejects(g.saveContent(c,1),/Nhập tên thương hiệu hoặc tải logo/);
+ assert.deepEqual(g.snapshot(),before);
+ c.brand.shortName='ANNI';await assert.rejects(g.saveContent(c,1),/Nhập tên thương hiệu hoặc tải logo/);
+ c.brand.name='ANNI COFFEE';await g.saveContent(c,1);
+ assert.equal(getContent(g.snapshot().settings).brand.logo,'');
+ assert.equal(getContent({content:{brand:{name:'',logo:'broken'}}}).brand.name,'ANNI COFFEE');
+ assert.equal(getContent({}).brand.name,'ANNI COFFEE');
+});
+
+test('Logo-only content uses neutral greetings or the explicit short name, with safe accessible markup',()=>{
+ const c=defaultContent();c.brand.name='';c.brand.logo=png;
+ assert.equal(contentVariables(c).brand,'quán');assert.equal(contentTheme('halloween',c).emphasis,'tại quán');
+ assert.equal(contentMessage(c,'loginTitle'),'Chào bạn, mời bạn ghé chơi.');
+ c.text.loginTitle='Xin chào bạn!';assert.equal(contentMessage(c,'loginTitle'),'Xin chào bạn!');
+ c.brand.shortName='ANNI';assert.equal(contentVariables(c).shortBrand,'ANNI');assert.equal(contentVariables(c).brand,'ANNI');
+ assert.doesNotMatch(brandMarkup(c),/brand-words/);assert.match(brandMarkup(c),/alt="ANNI"/);
+ c.brand.shortName='"<img onerror=x>';assert.doesNotMatch(brandMarkup(c),/alt=""<img/);
+ const paired=defaultContent();paired.brand.logo=png;assert.match(brandMarkup(paired),/with-logo/);
+ assert.throws(()=>validateContent({...c,brand:{...c.brand,logo:'javascript:alert(1)'}}),/Logo phải/);
 });

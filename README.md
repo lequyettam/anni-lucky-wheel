@@ -1,6 +1,6 @@
 # ANNI COFFEE · Vòng quay may mắn
 
-Bản demo 0.6 để duyệt giao diện và quy trình. Quà mẫu không có giá trị sử dụng.
+Bản demo 0.6.1 để duyệt giao diện và quy trình. Quà mẫu không có giá trị sử dụng.
 
 Chơi thử: https://lequyettam.github.io/anni-lucky-wheel/
 
@@ -16,7 +16,9 @@ Chơi thử: https://lequyettam.github.io/anni-lucky-wheel/
 Vào **Quản trị → Nội dung & thương hiệu** (`#admin/content`):
 
 1. Chọn nhóm **Thương hiệu**, **Lời chào theo theme**, **Trang chơi**, **Ví quà**, **Nhận thưởng** hoặc **Thể lệ**.
-2. Sửa tên, tên rút gọn, khẩu hiệu; tải logo PNG/JPG/WebP tối đa 2 MB. Logo được thu gọn theo tỷ lệ, cạnh dài tối đa 512px và tối đa 300 KB sau xử lý, giữ nền trong suốt. Logo xuất hiện trên đầu trang, tâm vòng quay, voucher và biểu tượng tab trình duyệt. Dùng **Dùng biểu trưng chữ** để bỏ logo.
+2. Sửa tên, tên rút gọn, khẩu hiệu; tải logo PNG/JPG/WebP tối đa 2 MB. Logo được thu gọn theo tỷ lệ, cạnh dài tối đa 512px và tối đa 300 KB sau xử lý, giữ nền trong suốt. Logo xuất hiện trên đầu trang, tâm vòng quay, voucher và biểu tượng tab trình duyệt. Dùng **Bỏ logo, dùng tên chữ** để bỏ logo. Khi đã có logo, có thể để trống **Tên thương hiệu** để chỉ hiển thị logo; khi bỏ logo phải có tên trước khi lưu. Tên rút gọn có thể giữ để dùng trong lời chào mà không hiện cạnh logo; nếu cả hai tên trống, các biến tên dùng “quán” và lời chào đăng nhập mặc định chuyển thành lời chào trung tính.
+Tên cạnh logo hiển thị gọn hơn: 18px trên laptop, 16px trên điện thoại; tên dài tự xuống dòng. Logo đứng riêng giữ tỷ lệ ảnh.
+
 3. Sửa nội dung và xem trước ngay. Lời chào lưu riêng cho từng theme; chọn theme trong trình biên tập chỉ đổi bản xem trước. Muốn đổi theme đang dùng, vào **Giao diện & chủ đề**.
 4. Bấm **Lưu nội dung** để áp dụng. Bản nháp được giữ khi đổi nhóm hoặc chuyển màn hình trong ứng dụng; tải lại/đóng trang sẽ bỏ bản nháp sau cảnh báo của trình duyệt. **Tải bản đang dùng** bỏ các chỉnh sửa chưa lưu.
 
@@ -85,7 +87,7 @@ Kho lưu trữ và lịch sử Git không chứa dữ liệu người chơi, mã
 - `dist/js/storage.js`: adapter `LocalRepository`, tuần tự hóa thao tác và dùng Web Locks khi trình duyệt hỗ trợ.
 - `dist/js/visuals.js`: `WheelRenderer`, `SoundController`, icon và định dạng.
 - `dist/js/app.js`: controller giao diện và các màn hình, không tự tính kết quả ngoài `GameService`.
-- `tests/`: 44 kiểm thử nghiệp vụ, chủ đề, nội dung, phục hồi và tranh chấp lưu.
+- `tests/`: 47 kiểm thử nghiệp vụ, chủ đề, nội dung, phục hồi và tranh chấp lưu.
 - `scripts/package.mjs`: sinh bản HTML độc lập từ các mô-đun.
 - `scripts/prepare-pages.mjs`: tạo bản xuất bản `release/pages`, gắn cùng mã phiên bản theo nội dung cho CSS và mọi mô-đun JavaScript để tránh bộ nhớ đệm trộn mã cũ/mới.
 - `docs/ARCHITECTURE.md`: định hướng chuyển sang Laravel + MySQL.

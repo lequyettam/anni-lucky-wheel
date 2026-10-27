@@ -20,8 +20,11 @@
   #app[data-view="customer"] .header-right{display:none}
   #app[data-view="customer"] .brand-mark{display:none}
   #app[data-view="customer"] .wordmark{flex-direction:row;align-items:baseline;gap:6px}
-  #app[data-view="customer"] .wordmark strong{font-size:23px;letter-spacing:2px}
-  #app[data-view="customer"] .wordmark small{font-size:8px;letter-spacing:1.5px;margin:0}
+  #app[data-view="customer"] .wordmark strong{font-size:20px;letter-spacing:1.5px}
+  #app[data-view="customer"] .wordmark small{font-size:6px;letter-spacing:1.5px;margin:0}
+  #app[data-view="customer"] .wordmark.with-logo{flex-direction:column;align-items:flex-start;gap:0}
+  #app[data-view="customer"] .wordmark.with-logo strong{font-size:16px;letter-spacing:.6px}
+  #app[data-view="customer"] .wordmark.with-logo small{margin-top:3px}
   #app[data-view="customer"] .mobile-header-label{display:block;font-size:10px;color:var(--muted)}
   .demo-bar{font-size:8px;line-height:1.4;padding:5px 8px;letter-spacing:0}
   .hero{display:flex;flex-direction:column;justify-content:center;gap:8px;padding:12px 0;min-height:calc(100svh - var(--mobile-top-space) - var(--mobile-bottom-space))}
@@ -293,8 +296,12 @@
 .brand-words strong{font-family:Georgia,serif;font-weight:400}
 .brand-words small{display:block}
 .brand .brand-words{max-width:210px}
-.brand .long-brand strong{font-size:19px;letter-spacing:1px}
-.brand-logo{width:48px;height:48px;object-fit:contain;flex-shrink:0;border-radius:8px;background:#fffcf4;padding:3px}
+.brand .wordmark strong{font-size:24px;letter-spacing:2px;line-height:1.15}
+.brand .wordmark small{font-size:7px;letter-spacing:2.5px;margin-top:4px}
+.brand .wordmark.with-logo strong{font-size:18px;letter-spacing:1px}
+.brand .brand-words.long-brand strong{font-size:16px;letter-spacing:.4px}
+.brand-logo{width:40px;height:40px;object-fit:contain;flex-shrink:0;border-radius:6px;background:#fffcf4;padding:2px}
+.brand-logo.is-solo{width:auto;max-width:120px;height:52px;padding:0;border-radius:0;background:transparent}
 .wheel-hub{container-type:inline-size}
 .wheel-hub>.brand-words{width:90%;max-height:85%;align-items:center;text-align:center;overflow:hidden}
 .hero .wheel-hub .brand-words strong,.theme-preview .wheel-hub .brand-words strong{max-width:100%;margin-left:0;font-size:clamp(8px,24cqw,25px);letter-spacing:.05em}
@@ -303,9 +310,11 @@
 .hub-logo{width:72%;height:72%;object-fit:contain}
 .preview-identity{display:flex;align-items:center;gap:6px;min-width:0;max-width:65%;color:inherit}
 .preview-identity .brand-words strong{font-size:18px;letter-spacing:1px}
+.preview-identity .brand-words.with-logo strong{font-size:13px;letter-spacing:.5px}
 .preview-identity .brand-words.long-brand strong{font-size:12px;letter-spacing:0}
 .preview-identity .brand-words small{font-size:6px;letter-spacing:1.5px;margin:3px 0 0}
 .preview-identity .brand-logo{width:30px;height:30px;padding:2px}
+.preview-identity .brand-logo.is-solo{width:auto;max-width:85px;height:35px;padding:0}
 .voucher-brand{display:flex!important;align-items:center;gap:6px;overflow-wrap:anywhere}
 .voucher-brand img{width:28px;height:28px;object-fit:contain;border-radius:5px;background:#fff9}
 .hero-description,.rules-layout p,.result-content .intro,.page-heading p,.content-preview-card p,.content-preview-copy p{white-space:pre-line;overflow-wrap:anywhere}
@@ -326,6 +335,7 @@
 .content-field-label label{margin:0;font-size:12px}
 .content-field-label .text-button{font-size:10px;text-decoration:underline;text-underline-offset:3px;min-width:42px;min-height:28px;justify-content:flex-end}
 .content-field input,.content-field textarea{font-size:13px;line-height:1.8}
+.content-field input{min-height:44px;padding:10px 12px;line-height:1.5}
 .content-field textarea{resize:vertical}
 .content-field small{font-size:10px}
 .logo-editor{display:flex;gap:14px;border:1px dashed #c8cabb;border-radius:12px;background:#f6f5ed;padding:15px;margin-bottom:18px}
@@ -372,9 +382,13 @@
 @media(max-width:1100px){.content-workspace{grid-template-columns:minmax(0,1fr) 260px;gap:18px}.content-fields{padding:18px}.content-tabs button{font-size:10px;padding:9px}.logo-editor{flex-direction:column}.content-save-bar{flex-wrap:wrap}.content-save-bar .form-actions{margin-left:auto}}
 @media(max-width:800px){
   .brand .brand-words{max-width:180px}
+  .brand .wordmark strong{font-size:20px;letter-spacing:1.5px}
+  .brand .wordmark.with-logo strong{font-size:16px;letter-spacing:.6px}
+  .brand .brand-words.long-brand strong{font-size:14px;letter-spacing:.3px}
   #app[data-view="customer"] .brand .brand-words{max-width:160px}
   #app[data-view="customer"] .brand .long-brand strong{font-size:14px;letter-spacing:.4px;line-height:1.25}
   #app[data-view="customer"] .brand-logo{width:34px;height:34px;padding:2px}
+  .brand-logo.is-solo,#app[data-view="customer"] .brand-logo.is-solo{width:auto;max-width:100px;height:40px;padding:0}
   .mobile-header-label{min-width:0;max-width:46%;overflow-wrap:anywhere;text-align:right}
   .mobile-nav a,.mobile-nav button{overflow-wrap:anywhere}
   .hero .wheel-stage{width:min(100%,440px,max(200px,calc(100svh - var(--mobile-top-space) - var(--mobile-bottom-space) - var(--mobile-title-space,31px) - 69px)))}
