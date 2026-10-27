@@ -1,6 +1,6 @@
 # ANNI COFFEE · Vòng quay may mắn
 
-Bản demo 0.6.1 để duyệt giao diện và quy trình. Quà mẫu không có giá trị sử dụng.
+Bản demo 0.6.2 để duyệt giao diện và quy trình. Quà mẫu không có giá trị sử dụng.
 
 Chơi thử: https://lequyettam.github.io/anni-lucky-wheel/
 
@@ -16,13 +16,15 @@ Chơi thử: https://lequyettam.github.io/anni-lucky-wheel/
 Vào **Quản trị → Nội dung & thương hiệu** (`#admin/content`):
 
 1. Chọn nhóm **Thương hiệu**, **Lời chào theo theme**, **Trang chơi**, **Ví quà**, **Nhận thưởng** hoặc **Thể lệ**.
-2. Sửa tên, tên rút gọn, khẩu hiệu; tải logo PNG/JPG/WebP tối đa 2 MB. Logo được thu gọn theo tỷ lệ, cạnh dài tối đa 512px và tối đa 300 KB sau xử lý, giữ nền trong suốt. Logo xuất hiện trên đầu trang, tâm vòng quay, voucher và biểu tượng tab trình duyệt. Dùng **Bỏ logo, dùng tên chữ** để bỏ logo. Khi đã có logo, có thể để trống **Tên thương hiệu** để chỉ hiển thị logo; khi bỏ logo phải có tên trước khi lưu. Tên rút gọn có thể giữ để dùng trong lời chào mà không hiện cạnh logo; nếu cả hai tên trống, các biến tên dùng “quán” và lời chào đăng nhập mặc định chuyển thành lời chào trung tính.
-Tên cạnh logo hiển thị gọn hơn: 18px trên laptop, 16px trên điện thoại; tên dài tự xuống dòng. Logo đứng riêng giữ tỷ lệ ảnh.
-
+2. Sửa tên, tên rút gọn, khẩu hiệu; tải ảnh vào **Logo dùng trên nền sáng** và **Logo dùng trên nền tối**. Mỗi ảnh PNG/JPG/WebP tối đa 2 MB, cạnh dài sau xử lý tối đa 512px và dung lượng tối đa 300 KB. Ưu tiên PNG/WebP trong suốt. Logo cũ được giữ ở ô nền sáng. Bấm **Xóa phiên bản này** để bỏ riêng một ảnh.
 3. Sửa nội dung và xem trước ngay. Lời chào lưu riêng cho từng theme; chọn theme trong trình biên tập chỉ đổi bản xem trước. Muốn đổi theme đang dùng, vào **Giao diện & chủ đề**.
 4. Bấm **Lưu nội dung** để áp dụng. Bản nháp được giữ khi đổi nhóm hoặc chuyển màn hình trong ứng dụng; tải lại/đóng trang sẽ bỏ bản nháp sau cảnh báo của trình duyệt. **Tải bản đang dùng** bỏ các chỉnh sửa chưa lưu.
 
-Các nút **Về gốc** bên từng trường, **Về gốc nhóm này**, **Đưa tất cả nội dung về gốc** và **Lấy bản lưu trước** đều đưa nội dung vào bản nháp trước. Kiểm tra rồi bấm **Lưu nội dung**. Hệ thống giữ **một bản lưu trước**, gồm cả logo; lưu lại bản phục hồi cũng có thể quay lại phiên bản vừa thay thế. Không ảnh hưởng phần thưởng, tỷ lệ, lượt quay, tài khoản hoặc trạng thái voucher.
+Logo được chọn theo **nền tại vị trí hiển thị**: đầu trang chơi của theme lễ hội dùng ảnh dành cho nền tối; tâm vòng quay, khu quản trị và voucher vẫn dùng ảnh dành cho nền sáng. Bản xem trước sử dụng cùng quy tắc, kể cả khi tắt hình nền lễ hội. Nếu chỉ có một ảnh, cả hai loại nền dùng chung ảnh đó; hệ thống không tự đổi màu logo. Biểu tượng tab trình duyệt chọn theo chế độ sáng/tối của hệ thống.
+
+Có ít nhất một logo thì **Tên thương hiệu** có thể để trống để chỉ hiện logo. Nếu xóa hết logo, cần nhập tên trước khi lưu. Tên rút gọn có thể giữ để dùng trong lời chào mà không hiện cạnh logo; nếu cả hai tên trống, các biến tên dùng “quán” và lời chào đăng nhập mặc định chuyển thành lời chào trung tính. Tên cạnh logo là 18px trên laptop, 16px trên điện thoại; tên dài tự xuống dòng. Logo giữ tỷ lệ ảnh.
+
+Các nút **Về gốc** bên từng trường, **Về gốc nhóm này**, **Đưa tất cả nội dung về gốc** và **Lấy bản lưu trước** đều đưa nội dung vào bản nháp trước. Kiểm tra rồi bấm **Lưu nội dung**. Hệ thống giữ **một bản lưu trước**, gồm cả hai phiên bản logo; lưu lại bản phục hồi cũng có thể quay lại phiên bản vừa thay thế. Không ảnh hưởng phần thưởng, tỷ lệ, lượt quay, tài khoản hoặc trạng thái voucher.
 
 Biến có sẵn: `{brand}`, `{shortBrand}`, `{customer}`, `{dailyFree}`. Nội dung hỗ trợ chữ và xuống dòng, không chèn mã HTML. Nên dùng tiêu đề ngắn trên điện thoại, tên rút gọn cho tâm vòng quay. Các thông báo trạng thái, lỗi và cảnh báo demo là nội dung hệ thống. Tên/điều kiện/ảnh phần thưởng sửa tại **Phần thưởng**; tên cửa hàng đổi quà tại **Thiết lập**. Điều kiện trên voucher đã cấp giữ nguyên.
 
@@ -87,7 +89,7 @@ Kho lưu trữ và lịch sử Git không chứa dữ liệu người chơi, mã
 - `dist/js/storage.js`: adapter `LocalRepository`, tuần tự hóa thao tác và dùng Web Locks khi trình duyệt hỗ trợ.
 - `dist/js/visuals.js`: `WheelRenderer`, `SoundController`, icon và định dạng.
 - `dist/js/app.js`: controller giao diện và các màn hình, không tự tính kết quả ngoài `GameService`.
-- `tests/`: 47 kiểm thử nghiệp vụ, chủ đề, nội dung, phục hồi và tranh chấp lưu.
+- `tests/`: 53 kiểm thử nghiệp vụ, chủ đề, nội dung, phục hồi và tranh chấp lưu.
 - `scripts/package.mjs`: sinh bản HTML độc lập từ các mô-đun.
 - `scripts/prepare-pages.mjs`: tạo bản xuất bản `release/pages`, gắn cùng mã phiên bản theo nội dung cho CSS và mọi mô-đun JavaScript để tránh bộ nhớ đệm trộn mã cũ/mới.
 - `docs/ARCHITECTURE.md`: định hướng chuyển sang Laravel + MySQL.

@@ -1,4 +1,12 @@
-# Kiểm tra bản demo 0.6.1
+# Kiểm tra bản demo 0.6.2
+
+## Hai phiên bản logo 0.6.2
+
+- 53/53 kiểm thử đạt. Sáu kiểm thử bổ sung bao gồm logo cũ, chọn ảnh và dùng chung hai chiều, lưu/tải lại/khôi phục hai ảnh, xóa riêng từng ảnh, validation ảnh nền tối và xử lý tải ảnh đồng thời/hủy kết quả cũ.
+- Kiểm thử preview cho cả tám theme, bật/tắt hình nền: đầu trang chọn ảnh theo nền theme, tâm vòng quay luôn chọn ảnh cho nền sáng. Preview ví quà dùng nền sáng.
+- Trình duyệt: tải hai PNG trong suốt qua hai file input, kiểm tra thông báo dùng chung khi chỉ tải một ảnh; lưu cả hai với tên trống; áp dụng Halloween và xác nhận header/hub dùng hai ảnh khác nhau. Xóa lần lượt mỗi phiên bản, lưu và kiểm tra ảnh còn lại dùng cho cả hai nền; lấy bản lưu trước phục hồi được cả hai ảnh.
+- Kiểm tra iframe 390×740 và 320×568: ảnh tải được, không tràn ngang, chú thích vòng quay ở trên dock. Admin 320px có hai ô tải xếp dọc, không tràn ngang. Chưa kiểm tra trên thiết bị thật.
+- Bản HTML độc lập: đầu trang Halloween dùng ảnh nền tối, tâm vòng quay dùng ảnh nền sáng; chuyển sang ví quà đổi về ảnh nền sáng. Các trang QA và ảnh thử không xuất bản.
 
 ## Logo và tên thương hiệu 0.6.1
 

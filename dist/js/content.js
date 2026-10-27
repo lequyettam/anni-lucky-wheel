@@ -64,10 +64,18 @@ export const THEME_FIELDS=Object.freeze([
   item('message','Lời chúc lễ hội / nhãn cạnh vòng quay','',90)
 ]);
 export const LOGO_MAX_BYTES=300*1024;
+export const LOGO_VARIANTS=Object.freeze([
+  Object.freeze({key:'logo',surface:'light',label:'Logo dùng trên nền sáng'}),
+  Object.freeze({key:'logoDark',surface:'dark',label:'Logo dùng trên nền tối'})
+]);
+/** Select for the local surface; use the other uploaded variant when one is missing. */
+export function brandLogo(brand,surface='light'){
+  return surface==='dark'?(brand.logoDark||brand.logo||''):(brand.logo||brand.logoDark||'');
+}
 const own=(o,k)=>Object.prototype.hasOwnProperty.call(o||{},k);
 const defaultThemeText=theme=>Object.fromEntries(THEME_FIELDS.map(({key})=>[key,theme[key].replaceAll('ANNI COFFEE','{brand}').replaceAll('ANNI','{shortBrand}') ]));
 export function defaultContent(){
-  return {brand:{...Object.fromEntries(BRAND_FIELDS.map(f=>[f.key,f.value])),logo:''},text:Object.fromEntries(CONTENT_GROUPS.flatMap(g=>g.fields).map(f=>[f.key,f.value])),themes:Object.fromEntries(THEMES.map(t=>[t.id,defaultThemeText(t)]))};
+  return {brand:{...Object.fromEntries(BRAND_FIELDS.map(f=>[f.key,f.value])),logo:'',logoDark:''},text:Object.fromEntries(CONTENT_GROUPS.flatMap(g=>g.fields).map(f=>[f.key,f.value])),themes:Object.fromEntries(THEMES.map(t=>[t.id,defaultThemeText(t)]))};
 }
 export function validLogo(value){
   if(value==='')return true;
@@ -81,9 +89,9 @@ export function getContent(settings){
   const defaults=defaultContent(),saved=settings?.content;
   const merge=(target,source,fields)=>{for(const f of fields)if(own(source,f.key)&&typeof source[f.key]==='string'&&source[f.key].length<=f.max&&(f.optional||source[f.key].trim()))target[f.key]=source[f.key];};
   merge(defaults.brand,saved?.brand,BRAND_FIELDS);
-  if(validLogo(saved?.brand?.logo))defaults.brand.logo=saved.brand.logo;
+  for(const {key} of LOGO_VARIANTS)if(validLogo(saved?.brand?.[key]))defaults.brand[key]=saved.brand[key];
   defaults.brand.name=defaults.brand.name.trim();
-  if(!defaults.brand.name&&!defaults.brand.logo)defaults.brand.name=BRAND_FIELDS.find(f=>f.key==='name').value;
+  if(!defaults.brand.name&&!brandLogo(defaults.brand))defaults.brand.name=BRAND_FIELDS.find(f=>f.key==='name').value;
   merge(defaults.text,saved?.text,CONTENT_GROUPS.flatMap(g=>g.fields));
   for(const theme of THEMES)merge(defaults.themes[theme.id],saved?.themes?.[theme.id],THEME_FIELDS);
   return defaults;
@@ -102,9 +110,12 @@ export function validateContent(value){
   };
   check(value.brand,checked.brand,BRAND_FIELDS);
   checked.brand.name=checked.brand.name.trim();checked.brand.shortName=checked.brand.shortName.trim();
-  if(!validLogo(value.brand.logo))throw new Error('Logo phải là ảnh PNG, JPG hoặc WebP hợp lệ, tối đa 300 KB sau tối ưu.');
-  checked.brand.logo=value.brand.logo;
-  if(!checked.brand.name&&!checked.brand.logo)throw new Error('Nhập tên thương hiệu hoặc tải logo lên trước khi lưu.');
+  for(const {key,label} of LOGO_VARIANTS){
+    const logo=own(value.brand,key)?value.brand[key]:'';
+    if(!validLogo(logo))throw new Error(`Logo phải là ảnh PNG, JPG hoặc WebP hợp lệ, tối đa 300 KB sau tối ưu (${label.toLowerCase()}).`);
+    checked.brand[key]=logo;
+  }
+  if(!checked.brand.name&&!brandLogo(checked.brand))throw new Error('Nhập tên thương hiệu hoặc tải logo lên trước khi lưu.');
   check(value.text,checked.text,CONTENT_GROUPS.flatMap(g=>g.fields));
   for(const theme of THEMES)check(value.themes?.[theme.id],checked.themes[theme.id],THEME_FIELDS);
   return checked;

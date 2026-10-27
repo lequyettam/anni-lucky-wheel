@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {GameService,MemoryRepository,createSeed} from '../dist/js/domain.js';
 import {LocalRepository} from '../dist/js/storage.js';
 import {THEMES} from '../dist/js/themes.js';
-import {getContent,defaultContent,contentRevision,contentTheme,contentVariables,formatContent,contentMessage,validateContent,LOGO_MAX_BYTES} from '../dist/js/content.js';
+import {getContent,defaultContent,contentRevision,contentTheme,contentVariables,formatContent,contentMessage,validateContent,brandLogo,LOGO_MAX_BYTES} from '../dist/js/content.js';
 import {ContentEditor,brandMarkup} from '../dist/js/content-editor.js';
 const now=new Date('2026-10-27T05:00:00Z');
 const game=()=>new GameService(new MemoryRepository(createSeed(now)),{clock:()=>now,random:()=>.5});
@@ -130,4 +130,79 @@ test('Logo-only content uses neutral greetings or the explicit short name, with 
  c.brand.shortName='"<img onerror=x>';assert.doesNotMatch(brandMarkup(c),/alt=""<img/);
  const paired=defaultContent();paired.brand.logo=png;assert.match(brandMarkup(paired),/with-logo/);
  assert.throws(()=>validateContent({...c,brand:{...c.brand,logo:'javascript:alert(1)'}}),/Logo phải/);
+});
+
+
+const darkPng='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+
+test('Legacy single logos remain available on both surfaces without changing saved input',async()=>{
+ const old=defaultContent();old.brand.logo=png;old.brand.name='';delete old.brand.logoDark;
+ const settings={content:old},before=structuredClone(settings),c=getContent(settings);
+ assert.deepEqual(settings,before);assert.equal(c.brand.logo,png);assert.equal(c.brand.logoDark,'');assert.equal(c.brand.name,'');
+ assert.equal(brandLogo(c.brand,'light'),png);assert.equal(brandLogo(c.brand,'dark'),png);
+ const g=game();await g.saveContent(old,0);assert.equal(getContent(g.snapshot().settings).brand.logoDark,'');
+});
+
+test('Logo selection uses the local surface and falls back in both directions',()=>{
+ for(const [light,dark,wantLight,wantDark] of [[png,darkPng,png,darkPng],[png,'',png,png],['',darkPng,darkPng,darkPng],['','','','']]){
+  const c=defaultContent();c.brand.logo=light;c.brand.logoDark=dark;
+  assert.equal(brandLogo(c.brand,'light'),wantLight);assert.equal(brandLogo(c.brand,'dark'),wantDark);
+  for(const surface of ['light','dark']){
+   const html=brandMarkup(c,'header',surface),expected=brandLogo(c.brand,surface);
+   if(expected)assert.ok(html.includes('src="'+expected+'"'));else assert.doesNotMatch(html,/<img/);
+  }
+ }
+ const c=defaultContent();c.brand.logoDark=darkPng;c.brand.name='';assert.equal(validateContent(c).brand.name,'');
+ assert.match(brandMarkup(c,'header','light'),/is-solo/);assert.doesNotMatch(brandMarkup(c,'header','dark'),/brand-words/);
+});
+
+test('Both logo versions persist and restore together without changing campaign or voucher data',async()=>{
+ const memory=new Map(),storage={getItem:k=>memory.get(k)||null,setItem:(k,v)=>memory.set(k,v)};
+ const g=new GameService(new LocalRepository('dual-logo',storage),{clock:()=>now});
+ const before=g.snapshot(),c=defaultContent();c.brand.logo=png;c.brand.logoDark=darkPng;c.brand.name='';
+ await g.saveContent(c,0);const reload=new GameService(new LocalRepository('dual-logo',storage),{clock:()=>now});
+ assert.deepEqual(getContent(reload.snapshot().settings),c);assert.deepEqual(withoutContent(reload.snapshot()),withoutContent(before));
+ await reload.saveContent(defaultContent(),1);
+ await reload.saveContent(reload.snapshot().settings.contentPrevious.content,2);
+ assert.deepEqual(getContent(reload.snapshot().settings),c);
+ const editor=new ContentEditor(reload.snapshot().settings);editor.removeLogo('logo');
+ assert.equal(editor.draft.brand.logoDark,darkPng);await reload.saveContent(editor.draft,3);
+ assert.equal(brandLogo(getContent(reload.snapshot().settings).brand,'light'),darkPng);
+ editor.removeLogo('logoDark');await assert.rejects(reload.saveContent(editor.draft,4),/Nhập tên thương hiệu/);
+ editor.resetSection();assert.equal(editor.draft.brand.logo,'');assert.equal(editor.draft.brand.logoDark,'');assert.equal(editor.draft.brand.name,'ANNI COFFEE');
+});
+
+test('Invalid dark logo uploads reject atomically while valid existing logo remains usable',async()=>{
+ const g=game(),c=defaultContent();c.brand.logo=png;await g.saveContent(c,0);const before=g.snapshot();
+ for(const bad of ['https://example.com/dark.png','data:image/svg+xml;base64,PHN2Zz4=',null,'data:image/png;base64,iVBORw0KGgo'+'A'.repeat(LOGO_MAX_BYTES*2)]){
+  const draft=structuredClone(c);draft.brand.logoDark=bad;await assert.rejects(g.saveContent(draft,1),/Logo phải/);assert.deepEqual(g.snapshot(),before);
+ }
+ assert.equal(getContent({content:{...c,brand:{...c.brand,logoDark:'javascript:alert(1)'}}}).brand.logoDark,'');
+});
+
+test('Each logo upload has its own lifecycle; remove or restore invalidates stale completions',()=>{
+ const editor=new ContentEditor(createSeed(now).settings);
+ const first=editor.beginLogoUpload('logo'),dark=editor.beginLogoUpload('logoDark');assert.equal(editor.uploading,true);
+ editor.removeLogo('logo');assert.equal(editor.isLogoUploadCurrent('logo',first),false);assert.equal(editor.isLogoUploadCurrent('logoDark',dark),true);
+ editor.finishLogoUpload('logo',first);assert.equal(editor.uploading,true);
+ editor.finishLogoUpload('logoDark',dark);assert.equal(editor.uploading,false);
+ const old=editor.beginLogoUpload('logoDark'),latest=editor.beginLogoUpload('logoDark');
+ editor.finishLogoUpload('logoDark',old);assert.equal(editor.uploading,true);assert.equal(editor.isLogoUploadCurrent('logoDark',old),false);
+ editor.resetAll();assert.equal(editor.isLogoUploadCurrent('logoDark',latest),false);assert.equal(editor.uploading,false);
+ assert.throws(()=>editor.beginLogoUpload('unknown'),/Phiên bản logo/);
+});
+
+test('Festival previews use the dark-surface logo in their header and light-surface logo in the wheel hub',()=>{
+ const seed=createSeed(now),editor=new ContentEditor(seed.settings);editor.draft.brand.logo=png;editor.draft.brand.logoDark=darkPng;
+ for(const theme of THEMES){
+  editor.themeId=theme.id;
+  for(const decorations of [true,false]){
+   const html=editor.preview(seed.prizes,{...seed.settings,appearance:{theme:theme.id,decorations}});
+   const header=html.match(/class="brand-logo[^>]*src="([^"]+)"/)[1],hub=html.match(/class="hub-logo[^>]*src="([^"]+)"/)[1];
+   assert.equal(header,theme.id==='anni'?png:darkPng);assert.equal(hub,png);
+  }
+ }
+ editor.section='wallet';assert.ok(editor.preview(seed.prizes,seed.settings).includes('src="'+png+'"'));
+ const html=editor.logoEditor();assert.match(html,/Logo dùng trên nền sáng/);assert.match(html,/Logo dùng trên nền tối/);
+ editor.removeLogo('logoDark');assert.match(editor.logoEditor(),/Dùng chung phiên bản nền sáng/);
 });

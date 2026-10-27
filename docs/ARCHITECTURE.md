@@ -79,3 +79,11 @@ Danh mục preset chứa đường dẫn `scene` và nội dung theo từng dị
 Logo được đọc và mã hóa lại qua canvas trước khi lưu dưới dạng data URL PNG/JPEG/WebP. UI giới hạn tệp đầu vào 2 MB, tối đa 20 triệu điểm ảnh, cạnh dài 512px; validation giới hạn dữ liệu đã tối ưu 300 KB và kiểm tra định dạng. Không nhận SVG, HTML hoặc URL logo bên ngoài. Mỗi lần lưu có thể giữ thêm một logo trong lịch sử, cần tính dung lượng localStorage.
 
 Ở bản máy chủ: lưu nội dung theo Campaign và trả qua GET /api/campaign. Thêm API quản trị có phân quyền, kiểm tra revision/ETag, audit người sửa, lịch sử phiên bản và endpoint upload kiểm tra/giải mã ảnh phía máy chủ. Không dùng kiểm tra trình duyệt làm bảo vệ cho upload thật. Cấu hình máy chủ là nguồn chung cho điện thoại khách và laptop quản trị.
+
+### Hai phiên bản logo 0.6.2
+
+Giữ `brand.logo` làm ảnh dùng trên nền sáng để dữ liệu 0.6/0.6.1 tiếp tục dùng được; thêm `brand.logoDark` mặc định rỗng. `brandLogo(brand, surface)` chọn đúng phiên bản rồi dự phòng bằng ảnh còn lại nếu thiếu. Validation kiểm tra riêng từng ảnh, cho phép bỏ tên khi có ít nhất một logo hợp lệ. Snapshot khôi phục lưu cả hai; cấu hình cũ thiếu `logoDark` được đọc thành rỗng mà không cần migration.
+
+Theme có `logoSurface` cho vùng đầu trang chơi/preview. Controller truyền nền thực của vị trí: admin, wallet, rules, voucher và tâm vòng quay là sáng; đầu trang chơi lễ hội và preview lễ hội là tối. Tắt minh họa không đổi nền tối của trang. Ảnh không có lớp nền trắng hoặc bộ lọc đổi màu tự động. Favicon chọn theo `prefers-color-scheme`, cập nhật khi tùy chọn hệ thống đổi.
+
+Mỗi ô tải có token và trạng thái xử lý riêng. Tải ảnh ở ô này không hủy ảnh ở ô còn lại; xóa/reset/khôi phục hủy kết quả xử lý cũ để ảnh không xuất hiện lại. Không cho lưu khi còn ảnh đang xử lý. Giới hạn 300 KB áp dụng mỗi ảnh; bản lưu trước có thể giữ thêm hai ảnh, do đó xử lý lỗi quota vẫn phải giữ nguyên bản đang dùng.

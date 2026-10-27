@@ -53,6 +53,7 @@ const festivals = [
    swatches:['#1F443B','#BF9752','#F1E5C8'],confetti:['#B89450','#B8C6A4','#F4E2BC','#759B88']}
 ].map(theme=>({...theme,lead:'',mobileLead:theme.headline,mobileEmphasis:theme.emphasis,scene:`./assets/themes/${theme.id}.webp`}));
 export const THEMES = Object.freeze([original,...festivals].map(theme=>Object.freeze({...theme,
+  logoSurface:theme.scene?'dark':'light',
   palette:theme.palette?Object.freeze(theme.palette):null,
   swatches:Object.freeze(theme.swatches),confetti:Object.freeze(theme.confetti)
 })));
