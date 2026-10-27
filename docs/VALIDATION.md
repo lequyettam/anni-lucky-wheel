@@ -1,4 +1,15 @@
-# Kiểm tra bản demo 0.7.0
+# Kiểm tra phiên bản 0.8.0
+
+
+## Hoàn thiện nội dung giao diện 0.8.0
+
+- 69/69 kiểm thử tự động đạt. Ba kiểm thử mới xác nhận nâng cấp đúng câu mặc định cũ, giữ nội dung riêng, điều kiện tài chính và bản ghi voucher đã cấp.
+- Đã bỏ banner/nhãn thử nghiệm, điền sẵn số điện thoại/mã thử, cảnh báo trong luồng khách/quản trị và chức năng nạp lại dữ liệu mẫu. Giữ hướng dẫn sử dụng, thể lệ, hạn/điều kiện voucher và xác nhận trước khi dùng tại quầy.
+- Browser QA với fixture tách biệt, có nội dung và điều kiện voucher của bản cũ: trang chơi, thể lệ, ví, chi tiết voucher, tổng quan, thiết lập, theme, nội dung và phân quyền hiển thị bình thường, không còn nhãn thử nghiệm mặc định. Không sửa dữ liệu hay tài khoản của người dùng.
+- Chiều rộng iframe 390px và 320px: vòng quay/thanh thao tác hiển thị đúng, không tràn ngang toàn trang (client/scroll lần lượt 375/375 và 305/305 do thanh cuộn). Chưa thay thế kiểm tra iPhone/Android thật.
+- Bản HTML độc lập mở được, giữ theme Halloween và logo đã lưu. Đã kiểm tra cú pháp bundle, đóng gói từ cùng mã nguồn, loại bỏ fixture QA khỏi bản xuất bản.
+- `npm run build` gắn cùng phiên bản nội dung cho CSS và toàn bộ import; gói HTML đổi tên thành `ANNI-COFFEE.html`.
+- Phạm vi kiểm tra này vẫn là ứng dụng lưu trữ trên trình duyệt. Các phần cần hoàn thành trước khi vận hành server được tách sang [SERVER-READINESS.md](SERVER-READINESS.md).
 
 ## Nhân viên & phân quyền 0.7.0
 
@@ -78,4 +89,4 @@ Số điện thoại, tổng/độ chính xác tỷ lệ, phân bổ hết quà 
 
 ## Giới hạn
 
-Chưa có backend, MySQL hoặc dữ liệu dùng chung nhiều thiết bị; quản trị là giao diện mô phỏng mở. Chống dùng lại ở bản demo chỉ áp dụng trong dữ liệu của trình duyệt. Các kiểm thử này không chứng minh an toàn khi vận hành quà thật. Chưa có OTP hoặc camera quét QR; thu ngân nhập mã voucher.
+Chưa có backend, MySQL hoặc dữ liệu dùng chung nhiều thiết bị; phân quyền được kiểm tra bằng dữ liệu trình duyệt, chưa phải ranh giới bảo mật phía máy chủ. Chống dùng lại ở bản demo chỉ áp dụng trong dữ liệu của trình duyệt. Các kiểm thử này không chứng minh an toàn khi vận hành quà thật. Chưa có OTP hoặc camera quét QR; thu ngân nhập mã voucher.

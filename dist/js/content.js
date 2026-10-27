@@ -1,3 +1,4 @@
+import {upgradePresentationText} from './release-copy.js';
 import {THEMES, getTheme} from './themes.js';
 
 /** Editable presentation data. No prize, quota, redemption or account fields belong here. */
@@ -12,7 +13,7 @@ export const CONTENT_GROUPS=Object.freeze([
     item('rewardsEyebrow','Dòng dẫn khu quà tặng','Những điều dễ thương đang chờ',80),
     item('rewardsTitle','Tiêu đề khu quà tặng','Quà nhỏ, vui thật.',80),
     item('loginTitle','Lời chào khi đăng nhập','Chào bạn, {shortBrand} đây.',90),
-    item('loginIntro','Giới thiệu đăng nhập','Nhập số điện thoại để bắt đầu. Bản trải nghiệm chưa dùng OTP; bạn có thể dùng số mẫu bên dưới.',300,{multiline:true}),
+    item('loginIntro','Giới thiệu đăng nhập','Nhập số điện thoại để nhận lượt quay và lưu những món quà của bạn.',300,{multiline:true}),
     item('codeTitle','Tiêu đề hộp nhập mã','Thêm lượt, thêm vui.',80),
     item('codeIntro','Hướng dẫn nhập mã','Nhập mã thu ngân cung cấp để nhận thêm lượt quay. Mỗi mã có giới hạn và thời hạn riêng.',300,{multiline:true})
   ]},
@@ -37,13 +38,13 @@ export const CONTENT_GROUPS=Object.freeze([
     item('rulesNav','Tên mục thể lệ','Thể lệ',25),
     item('rulesEyebrow','Dòng dẫn trang thể lệ','Một chút thông tin trước khi chơi',80),
     item('rulesTitle','Tiêu đề trang thể lệ','Chơi vui, nhận quà dễ.',90),
-    item('rulesIntro','Giới thiệu thể lệ','Thể lệ của chiến dịch đang được thiết lập trong bản trải nghiệm.',300,{multiline:true}),
+    item('rulesIntro','Giới thiệu thể lệ','Tìm hiểu cách nhận lượt quay, nhận quà và sử dụng voucher tại cửa hàng.',300,{multiline:true}),
     item('rulesLeadTitle','Tiêu đề khối giới thiệu','May mắn bắt đầu từ một lần ghé.',100),
-    item('rulesLeadBody','Nội dung khối giới thiệu','Nhận lượt quay, chạm vào vòng quay và lưu lại món quà của bạn. Mang voucher đến {brand} để trải nghiệm quy trình đổi quà.',600,{multiline:true}),
+    item('rulesLeadBody','Nội dung khối giới thiệu','Nhận lượt quay, chạm vào vòng quay và lưu lại món quà của bạn. Mang voucher đến {brand} và nhờ nhân viên hỗ trợ đổi quà.',600,{multiline:true}),
     item('rulesTurns','Nhận lượt quay','Mỗi số điện thoại có {dailyFree} lượt miễn phí mỗi ngày, làm mới lúc 00:00 giờ Việt Nam và không cộng dồn. Mã từ thu ngân cấp thêm lượt theo giới hạn riêng; lượt có ngày hết hạn. Chọn nguồn lượt trước khi quay.',1000,{multiline:true}),
     item('rulesProbability','Kết quả & tỷ lệ','Kích thước các ô giúp dễ đọc; cơ hội trúng phụ thuộc tỷ lệ bên dưới. Khi quà hết, tỷ lệ được chia đều cho các ô còn hiệu lực có tỷ lệ gốc lớn hơn 1%, bao gồm ô không trúng. Tỷ lệ không đảm bảo số lần trúng trong một nhóm lượt cố định.',1000,{multiline:true}),
     item('rulesVoucher','Lưu & sử dụng voucher','Quà được lưu sau khi có kết quả. Mỗi voucher có mã riêng, thời hạn và điều kiện áp dụng; khách bấm “Sử dụng voucher” tại quầy hoặc nhờ nhân viên đánh dấu đã sử dụng. Sau khi xác nhận, voucher chuyển sang “Đã sử dụng” và không thể dùng lại. Việc sửa phần thưởng sau này không thay đổi voucher đã cấp.',1000,{multiline:true}),
-    item('rulesRecovery','Mã khôi phục & dữ liệu','Số điện thoại được kiểm tra định dạng, chưa xác thực bằng OTP. Lưu mã khôi phục khi trúng quà lần đầu. Trong bản demo, ví chỉ tồn tại trong trình duyệt này; xóa dữ liệu trình duyệt sẽ xóa dữ liệu mẫu. Không nhập dữ liệu khách hàng thật. Phiên bản máy chủ mới hỗ trợ khôi phục trên thiết bị khác.',1000,{multiline:true})
+    item('rulesRecovery','Mã khôi phục & dữ liệu','Hãy lưu mã khôi phục được cấp khi nhận quà lần đầu. Khi đăng nhập lại vào ví đã tạo, nhập số điện thoại và mã khôi phục của bạn. Giữ mã ở nơi riêng tư, không chia sẻ với người khác. Liên hệ cửa hàng nếu cần hỗ trợ.',1000,{multiline:true})
   ]}
 ].map(group=>Object.freeze({...group,fields:Object.freeze(group.fields)})));
 export const BRAND_FIELDS=Object.freeze([
@@ -92,7 +93,9 @@ export function getContent(settings){
   for(const {key} of LOGO_VARIANTS)if(validLogo(saved?.brand?.[key]))defaults.brand[key]=saved.brand[key];
   defaults.brand.name=defaults.brand.name.trim();
   if(!defaults.brand.name&&!brandLogo(defaults.brand))defaults.brand.name=BRAND_FIELDS.find(f=>f.key==='name').value;
+  const originalText={...defaults.text};
   merge(defaults.text,saved?.text,CONTENT_GROUPS.flatMap(g=>g.fields));
+  defaults.text=upgradePresentationText(defaults.text,originalText);
   for(const theme of THEMES)merge(defaults.themes[theme.id],saved?.themes?.[theme.id],THEME_FIELDS);
   return defaults;
 }

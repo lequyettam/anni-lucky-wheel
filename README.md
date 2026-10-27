@@ -1,15 +1,16 @@
 # ANNI COFFEE · Vòng quay may mắn
 
-Bản demo 0.6.2 để duyệt giao diện và quy trình. Quà mẫu không có giá trị sử dụng.
+Phiên bản 0.8.0 hoàn thiện nội dung giao diện để kiểm tra trước khi chuyển lên máy chủ riêng.
 
-Chơi thử: https://lequyettam.github.io/anni-lucky-wheel/
+**Hiện trạng kỹ thuật:** ứng dụng vẫn lưu dữ liệu trong trình duyệt. Việc bỏ nhãn thử nghiệm không bổ sung backend, đồng bộ thiết bị hay bảo mật máy chủ. Xem [kế hoạch chuyển máy chủ](docs/SERVER-READINESS.md) trước khi vận hành với khách hàng thật.
 
-## Chạy thử
+Mở ứng dụng: https://lequyettam.github.io/anni-lucky-wheel/
 
-- Mở bản `ANNI-COFFEE-Demo.html` trong Chrome, Edge hoặc Safari. Bản này được sinh tự động từ cùng mã nguồn, không phải một bản code riêng.
+## Chạy ứng dụng
+
+- Mở bản `ANNI-COFFEE.html` trong Chrome, Edge hoặc Safari. Bản này được sinh tự động từ cùng mã nguồn, không phải một bản code riêng.
 - Hoặc phục vụ thư mục `dist` bằng máy chủ tĩnh. Ví dụ: `python3 -m http.server 8080 --directory dist`, rồi mở `http://localhost:8080`.
-- Số mẫu: `0900000001`. Mã cấp lượt mẫu: `ANNI2026` (2 lượt, mỗi SĐT 1 lần).
-- Trên laptop, nút **Quản trị demo** mở tất cả thiết lập. Trên điện thoại, nhân viên dùng đường dẫn `/#admin` (GitHub Pages: https://lequyettam.github.io/anni-lucky-wheel/#admin). Chưa có xác thực nhân viên thật.
+- Mở **Quản trị** trên laptop hoặc đường dẫn `#admin` trên điện thoại. Nhân viên đăng nhập và chỉ thấy các mục được cấp quyền. Tài khoản hiện được lưu và kiểm tra trong trình duyệt.
 
 ## Nhân viên & phân quyền 0.7.0
 
@@ -17,7 +18,7 @@ Vào **Quản trị → Nhân viên & phân quyền** (`#admin/staff`). Lần đ
 
 1. Bấm **Thêm nhân viên**, nhập thông tin và chọn nhóm mẫu: **Chỉ xem voucher**, **Thu ngân** hoặc **Quản trị viên**.
 2. Hai nhóm nhân viên mặc định chỉ mở trang **Voucher**. Chỉ xem được tìm theo tên/SĐT/mã và xem chi tiết; thu ngân được thêm quyền xác nhận sử dụng một lần. Không được sửa giá trị, hạn dùng hay phục hồi voucher đã dùng.
-3. Khi cần, cấp thêm quyền theo từng mục: **Không truy cập / Chỉ xem / Xem & chỉnh sửa**. Voucher tách quyền **Xác nhận sử dụng**, báo cáo tách quyền **Xuất CSV**. Cấp chỉnh sửa luôn gồm xem. Quản lý nhân viên và khôi phục dữ liệu chỉ dành cho quản trị viên.
+3. Khi cần, cấp thêm quyền theo từng mục: **Không truy cập / Chỉ xem / Xem & chỉnh sửa**. Voucher tách quyền **Xác nhận sử dụng**, báo cáo tách quyền **Xuất CSV**. Cấp chỉnh sửa luôn gồm xem. Quản lý nhân viên chỉ dành cho quản trị viên.
 4. Bấm **Chỉnh sửa** trên tài khoản để đổi tên, quyền, đặt mật khẩu mới hoặc bỏ **Cho phép tài khoản đăng nhập** để khóa. Đổi mật khẩu/quyền/khóa sẽ kết thúc các phiên của tài khoản đó, kể cả tab đang mở. Không thể khóa hoặc hạ quyền quản trị viên hoạt động cuối cùng.
 5. **Nhật ký thao tác** ghi tài khoản thao tác, thời điểm, tài khoản được cập nhật và các xác nhận voucher. Ghi nhận tên/ID nhân viên từ phiên hiện tại, không nhập tay tên người xác nhận.
 6. Mỗi tab có phiên nhân viên riêng, tối đa 8 giờ; đăng xuất nhân viên không đăng xuất ví khách. Tài khoản nhân viên ở góc trên cho phép đổi mật khẩu bằng mật khẩu hiện tại và đăng xuất.
@@ -26,7 +27,7 @@ Menu, trang qua đường dẫn trực tiếp, thao tác giao diện và các l�
 
 **Phạm vi:** đây là mô phỏng phân quyền bằng dữ liệu trình duyệt, **không phải bảo mật phía máy chủ**. Tài khoản mới chỉ dùng trong cùng hồ sơ trình duyệt và cùng địa chỉ website; tạo trên laptop chưa đăng nhập được trên điện thoại khác. Không dùng mật khẩu thật của dịch vụ khác, dữ liệu khách thật hoặc quà thật. Xóa dữ liệu website sẽ mất cả tài khoản demo. Nếu quên mật khẩu, nhờ một quản trị viên khác đặt lại; bản demo không có luồng khôi phục quản trị viên duy nhất.
 
-Nút **Khôi phục dữ liệu mẫu** chỉ nạp lại dữ liệu game, giữ tài khoản/quyền và nhật ký nhân viên. Cần API + cơ sở dữ liệu tập trung để áp dụng quyền và chống dùng lại voucher giữa các thiết bị trong bản vận hành thật.
+Bản 0.8 bỏ chức năng nạp lại dữ liệu mẫu khỏi giao diện. Các chức năng khôi phục nội dung thương hiệu vẫn giữ nguyên. Cần API + cơ sở dữ liệu tập trung để áp dụng quyền và chống dùng lại voucher giữa các thiết bị.
 
 ## Nội dung & thương hiệu 0.6
 
@@ -43,7 +44,7 @@ Có ít nhất một logo thì **Tên thương hiệu** có thể để trống 
 
 Các nút **Về gốc** bên từng trường, **Về gốc nhóm này**, **Đưa tất cả nội dung về gốc** và **Lấy bản lưu trước** đều đưa nội dung vào bản nháp trước. Kiểm tra rồi bấm **Lưu nội dung**. Hệ thống giữ **một bản lưu trước**, gồm cả hai phiên bản logo; lưu lại bản phục hồi cũng có thể quay lại phiên bản vừa thay thế. Không ảnh hưởng phần thưởng, tỷ lệ, lượt quay, tài khoản hoặc trạng thái voucher.
 
-Biến có sẵn: `{brand}`, `{shortBrand}`, `{customer}`, `{dailyFree}`. Nội dung hỗ trợ chữ và xuống dòng, không chèn mã HTML. Nên dùng tiêu đề ngắn trên điện thoại, tên rút gọn cho tâm vòng quay. Các thông báo trạng thái, lỗi và cảnh báo demo là nội dung hệ thống. Tên/điều kiện/ảnh phần thưởng sửa tại **Phần thưởng**; tên cửa hàng đổi quà tại **Thiết lập**. Điều kiện trên voucher đã cấp giữ nguyên.
+Biến có sẵn: `{brand}`, `{shortBrand}`, `{customer}`, `{dailyFree}`. Nội dung hỗ trợ chữ và xuống dòng, không chèn mã HTML. Nên dùng tiêu đề ngắn trên điện thoại, tên rút gọn cho tâm vòng quay. Các thông báo trạng thái và lỗi là nội dung hệ thống. Tên/điều kiện/ảnh phần thưởng sửa tại **Phần thưởng**; tên cửa hàng đổi quà tại **Thiết lập**. Điều kiện trên voucher đã cấp giữ nguyên.
 
 Cấu hình chỉ lưu trong trình duyệt hiện tại, đồng bộ giữa các tab cùng nguồn; **chưa áp dụng chung cho thiết bị của khách**. Nếu hai tab sửa cùng lúc, bản cũ bị chặn lưu và cần tải bản đang dùng. Không cần xóa dữ liệu demo cũ để sử dụng tính năng mới.
 
@@ -58,7 +59,7 @@ Vào **Quản trị → Giao diện & chủ đề** (`#admin/themes`):
 
 Mỗi lễ hội có cảnh minh họa riêng, bảng màu, tiêu đề, vòng quay viền ánh kim, nút quay và thẻ nhận thưởng theo chủ đề. Tết dùng mai, đào, bánh chưng/bánh tét và lì xì; 30/4 dùng cờ đỏ sao vàng và hoa sen; 8/3 là vườn hoa; 20/11 là góc sách tri ân. Hình nền không bắt tương tác. Tên quà, điều kiện, ảnh quà và kết quả vẫn lấy từ dữ liệu động. Ảnh WebP 768×1152 khoảng 88–130 KB mỗi chủ đề; trang chơi chỉ tải cảnh đang dùng, ảnh thẻ quản trị tải lười. Bản HTML đóng gói nhúng toàn bộ ảnh nên dùng được khi không có máy chủ ảnh. Không tự đổi theo lịch; không thay đổi tỷ lệ, tồn quà, lượt quay hoặc voucher đã cấp. Quản trị giữ giao diện trung tính để dễ thao tác.
 
-**Phạm vi demo:** cấu hình lưu trong trình duyệt hiện tại và cập nhật giữa các tab cùng nguồn khi không có thao tác/hộp thoại đang mở. Không áp dụng chung cho điện thoại của khách khác. Cần lưu cấu hình chiến dịch qua máy chủ để đồng bộ toàn bộ thiết bị.
+**Phạm vi lưu trữ hiện tại:** cấu hình lưu trong trình duyệt hiện tại và cập nhật giữa các tab cùng nguồn khi không có thao tác/hộp thoại đang mở. Không áp dụng chung cho điện thoại của khách khác. Cần lưu cấu hình chiến dịch qua máy chủ để đồng bộ toàn bộ thiết bị.
 
 ## Giao diện mobile 0.3
 
@@ -66,7 +67,7 @@ Mỗi lễ hội có cảnh minh họa riêng, bảng màu, tiêu đề, vòng q
 - Thanh dưới có một nút quay, số lượt của nguồn đang chọn và nút **Nhập mã** có nhãn rõ ràng. Có cả hai nguồn thì hiện hai nút chọn; nguồn đang chọn hết lượt thì tự chọn nguồn còn lượt, không tự tiêu hao lượt.
 - Hết lượt hoặc tạm dừng: nút quay bị khóa, vẫn nhập mã được. Khách có thể mở **Vòng quay / Quà của tôi / Thể lệ / Tài khoản** từ điều hướng dưới.
 - Kích thước vòng quay và khoảng trống dưới nội dung dựa trên chiều cao màn hình, chiều cao thực của thanh điều khiển và vùng an toàn thiết bị. Màn hình quá thấp vẫn cho cuộn nội dung.
-- Quà mẫu nằm phía dưới màn hình chơi; nhãn trang trí không che các ô thưởng. Giao diện laptop giữ bố cục đầy đủ.
+- Danh sách quà nằm phía dưới màn hình chơi; nhãn trang trí không che các ô thưởng. Giao diện laptop giữ bố cục đầy đủ.
 
 ## Tính năng
 
@@ -80,19 +81,19 @@ Mỗi lễ hội có cảnh minh họa riêng, bảng màu, tiêu đề, vòng q
 - Hai cách xác nhận dùng chung trạng thái: chỉ chuyển một lần sang “Đã sử dụng”, lưu người xác nhận, nguồn khách/nhân viên và thời gian; báo cáo có lọc và xuất CSV.
 - Giữ nguyên điều kiện voucher đã cấp khi sửa danh mục quà.
 
-## Giới hạn demo
+## Phạm vi vận hành hiện tại
 
-Dữ liệu lưu trong `localStorage` của trình duyệt, không phải máy chủ. Điện thoại và laptop không chia sẻ dữ liệu; mã khôi phục không thể khôi phục sau khi xóa dữ liệu trình duyệt. Code phía khách và quản trị demo có thể bị sửa. Không dùng để trao quà thật hay thu thập thông tin thật.
+Dữ liệu lưu trong `localStorage` của trình duyệt, không phải máy chủ. Điện thoại và laptop không chia sẻ dữ liệu; mã khôi phục không thể khôi phục sau khi xóa dữ liệu trình duyệt. Code phía khách và quản trị có thể bị sửa. Không dùng để trao quà thật hay thu thập thông tin thật.
 
 Mã chi nhánh trên mã cấp lượt hiện là nhãn đối soát, không xác minh hóa đơn hay vị trí cửa hàng. Tài khoản hiện chưa OTP. Voucher dùng mã văn bản tại quầy; camera quét QR sẽ bổ sung khi triển khai máy chủ.
 
 Kho lưu trữ và lịch sử Git không chứa dữ liệu người chơi, mã khôi phục hay phiên đăng nhập. Google Fonts là tùy chọn trang trí; nếu không tải được, app dùng font hệ thống.
 
-## Thử sử dụng voucher
+## Sử dụng voucher
 
 1. Khách vào **Quà của tôi → Sử dụng voucher**, kiểm tra điều kiện, bấm **Xác nhận sử dụng** tại quầy. Bấm **Để sau** sẽ giữ nguyên voucher.
 2. Voucher chuyển sang **Đã sử dụng**, hiển thị thời gian và người xác nhận; không còn nút dùng lại. Voucher hết hạn không thể sử dụng.
-3. Nếu khách quên bấm: thu ngân đăng nhập vào **Voucher → Đã sử dụng** trên thẻ quà, kiểm tra khách/mã/quà rồi xác nhận. Hoặc nhập mã ở **Đổi voucher**.
+3. Nếu khách quên bấm: thu ngân đăng nhập vào **Voucher → Đánh dấu đã dùng** trên thẻ quà, kiểm tra khách/mã/quà rồi xác nhận. Hoặc nhập mã ở **Đổi voucher**.
 4. Trên cùng trình duyệt, khách và nhân viên dùng chung dữ liệu; các tab cùng nguồn cập nhật trạng thái qua sự kiện lưu trữ. Dữ liệu đã lưu từ bản 0.1 vẫn dùng được.
 
 Để điện thoại khách và laptop thu ngân cùng biết voucher đã dùng, cần triển khai máy chủ và cơ sở dữ liệu chung. Bản GitHub Pages chưa làm được việc đó; chống dùng lại trong demo chỉ có hiệu lực trong dữ liệu của trình duyệt hiện tại.
@@ -109,7 +110,8 @@ Kho lưu trữ và lịch sử Git không chứa dữ liệu người chơi, mã
 - `dist/js/storage.js`: adapter `LocalRepository`, tuần tự hóa thao tác và dùng Web Locks khi trình duyệt hỗ trợ.
 - `dist/js/visuals.js`: `WheelRenderer`, `SoundController`, icon và định dạng.
 - `dist/js/app.js`: controller giao diện và các màn hình, không tự tính kết quả ngoài `GameService`.
-- `tests/`: 66 kiểm thử nghiệp vụ, chủ đề, nội dung, phục hồi và tranh chấp lưu.
+- `dist/js/release-copy.js`: chuyển cách hiển thị các câu mặc định cũ; không ghi đè nội dung riêng hoặc bản ghi voucher.
+- `tests/`: 69 kiểm thử nghiệp vụ, chủ đề, nội dung, phục hồi và tranh chấp lưu.
 - `scripts/package.mjs`: sinh bản HTML độc lập từ các mô-đun.
 - `scripts/prepare-pages.mjs`: tạo bản xuất bản `release/pages`, gắn cùng mã phiên bản theo nội dung cho CSS và mọi mô-đun JavaScript để tránh bộ nhớ đệm trộn mã cũ/mới.
 - `docs/ARCHITECTURE.md`: định hướng chuyển sang Laravel + MySQL.
@@ -128,13 +130,13 @@ npm run package
 
 ## Đưa lên GitHub Pages
 
-1. Tạo repository cho bản demo. Với GitHub Free, repository dùng Pages cần công khai.
+1. Tạo repository cho ứng dụng. Với GitHub Free, repository dùng Pages cần công khai.
 2. Đưa toàn bộ mã nguồn vào nhánh `main`.
 3. Vào **Settings → Pages → Source: GitHub Actions**.
 4. Workflow `.github/workflows/pages.yml` chạy kiểm thử rồi đóng gói và xuất bản thư mục `release/pages`.
 5. Mở URL mà bước deploy trả về; không đoán URL nếu repository dùng tên hoặc miền khác.
 
-Chỉ dùng Pages làm bản trình diễn quà mẫu. Bản phục vụ khách thật cần backend và nơi lưu dữ liệu tập trung.
+Pages phục vụ bản giao diện để kiểm tra trước khi chuyển máy chủ. Bản phục vụ khách thật cần backend và nơi lưu dữ liệu tập trung.
 
 ## Tài liệu nền tảng
 

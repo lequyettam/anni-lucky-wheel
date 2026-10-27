@@ -7,7 +7,7 @@ export class LocalRepository {
   }
   read() {
     try { const value = JSON.parse(this.storage.getItem(this.key)); if (value?.version !== 1) throw new Error(); return value; }
-    catch { throw new RuleError('Dữ liệu thử nghiệm không đọc được. Hãy dùng nút khôi phục dữ liệu mẫu trong quản trị.'); }
+    catch { throw new RuleError('Không đọc được dữ liệu ứng dụng. Vui lòng liên hệ quản trị viên để kiểm tra.'); }
   }
   write(state) { try { this.storage.setItem(this.key, JSON.stringify(state)); } catch { throw new RuleError('Trình duyệt không lưu được dữ liệu. Hãy giảm dung lượng ảnh hoặc cho phép lưu trữ.'); } }
   transaction(fn) {

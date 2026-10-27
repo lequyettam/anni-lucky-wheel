@@ -41,7 +41,7 @@ export const staffHome = staff => can(staff,'vouchers.view')?'admin/vouchers':AC
 
 // Explicit allowlist at the UI boundary; mutations are also checked inside transactions.
 export const ACTION_PERMISSIONS = Object.fromEntries([
-  ...['source','sound','spin','account','login','sample-phone','fill-code','code','close','go-play','go-wallet','wallet-filter','voucher','copy','copy-recovery','recovery','recovery-saved','logout','logout-confirm','demo-info','use-voucher','customer-redeem'].map(a=>[a,null]),
+  ...['source','sound','spin','account','login','code','close','go-play','go-wallet','wallet-filter','voucher','copy','copy-recovery','recovery','recovery-saved','logout','logout-confirm','help','use-voucher','customer-redeem'].map(a=>[a,null]),
   ...['staff-account','staff-logout'].map(a=>[a,'session']),
   ...['staff-add','staff-edit','staff-tab'].map(a=>[a,'staff.manage']),
   ['staff-lookup','vouchers.view'],['staff-voucher','vouchers.view'],['confirm-redeem','vouchers.redeem'],['redeem','vouchers.redeem'],
@@ -50,7 +50,7 @@ export const ACTION_PERMISSIONS = Object.fromEntries([
   ...['theme-select','theme-discard'].map(a=>[a,'themes.view']),
   ...['add-prize','edit-prize','remove-image','delete-prize','discard-prizes','save-prizes'].map(a=>[a,'prizes.edit']),
   ...['add-code','edit-code','generate-code'].map(a=>[a,'codes.edit']),
-  ['export-report','reports.export'],['export-config','staff.manage'],['reset','data.reset'],['reset-confirm','data.reset']
+  ['export-report','reports.export'],['export-config','staff.manage']
 ]);
 export const FORM_PERMISSIONS = {
   login:null,activate:null,name:null,claim:null,'staff-setup':null,'staff-login':null,

@@ -1,4 +1,4 @@
-name: Test and publish demo
+name: Verify and publish application
 on:
   push:
     branches: [main]

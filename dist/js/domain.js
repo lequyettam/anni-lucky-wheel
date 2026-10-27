@@ -1,3 +1,4 @@
+import {PRIZE_TERMS} from './release-copy.js';
 import {requirePermission} from './access-policy.js';
 import {isThemeId} from './themes.js';
 import {getContent, validateContent, contentRevision} from './content.js';
@@ -84,11 +85,11 @@ export function createSeed(now = new Date()) {
     settings:{title:'Vòng quay may mắn', dailyFree:1, active:true, mode:'weighted', start:'', end:'', branch:'ANNI COFFEE', codeHint:'ANNI2026', appearance:{theme:'anni',decorations:true}},
     prizes:[
       {id:'luck', name:'Chúc bạn may mắn lần sau', short:'Hẹn lần sau', kind:'lose', weight:4000, stock:null, days:7, color:'#294D40', icon:'leaf', terms:'Một chút hồi hộp, một niềm vui nhỏ. Hẹn bạn ở lượt quay tiếp theo!', image:''},
-      {id:'off10', name:'Voucher giảm 10%', short:'Giảm 10%', kind:'percent', weight:2500, stock:100, days:7, color:'#F1DFC1', icon:'ticket', terms:'Quà mẫu: giảm tối đa 20.000đ cho đơn từ 100.000đ. Không cộng dồn ưu đãi.', image:''},
-      {id:'off20', name:'Voucher giảm 20%', short:'Giảm 20%', kind:'percent', weight:1500, stock:50, days:7, color:'#A4B4A0', icon:'ticket', terms:'Quà mẫu: giảm tối đa 30.000đ cho đơn từ 150.000đ. Không cộng dồn ưu đãi.', image:''},
-      {id:'off30', name:'Voucher giảm 30%', short:'Giảm 30%', kind:'percent', weight:1000, stock:20, days:7, color:'#7B4936', icon:'gift', terms:'Quà mẫu: giảm tối đa 50.000đ cho đơn từ 200.000đ. Không cộng dồn ưu đãi.', image:''},
-      {id:'milk', name:'Một ly cà phê sữa', short:'Cà phê sữa', kind:'drink', weight:900, stock:20, days:7, color:'#D5B886', icon:'cup', terms:'Quà mẫu: một ly cà phê sữa size tiêu chuẩn tại cửa hàng. Không quy đổi tiền mặt.', image:''},
-      {id:'grand', name:'Voucher giảm 5.000.000đ', short:'5.000.000đ', kind:'amount', weight:100, stock:1, days:30, color:'#DADDD0', icon:'spark', terms:'Giải đặc biệt minh họa. Chưa áp dụng cho giao dịch thực tế.', image:''}
+      {id:'off10', name:'Voucher giảm 10%', short:'Giảm 10%', kind:'percent', weight:2500, stock:100, days:7, color:'#F1DFC1', icon:'ticket', terms:PRIZE_TERMS.off10, image:''},
+      {id:'off20', name:'Voucher giảm 20%', short:'Giảm 20%', kind:'percent', weight:1500, stock:50, days:7, color:'#A4B4A0', icon:'ticket', terms:PRIZE_TERMS.off20, image:''},
+      {id:'off30', name:'Voucher giảm 30%', short:'Giảm 30%', kind:'percent', weight:1000, stock:20, days:7, color:'#7B4936', icon:'gift', terms:PRIZE_TERMS.off30, image:''},
+      {id:'milk', name:'Một ly cà phê sữa', short:'Cà phê sữa', kind:'drink', weight:900, stock:20, days:7, color:'#D5B886', icon:'cup', terms:PRIZE_TERMS.milk, image:''},
+      {id:'grand', name:'Voucher giảm 5.000.000đ', short:'5.000.000đ', kind:'amount', weight:100, stock:1, days:30, color:'#DADDD0', icon:'spark', terms:PRIZE_TERMS.grand, image:''}
     ],
     codes:[{id:'code-anni', code:'ANNI2026', turns:2, maxUses:100, perPhone:1, period:'all', creditDays:7, starts:days(-1), ends:days(30), active:true, branch:'ANNI COFFEE', uses:[]}],
     users:[], credits:[], spins:[], vouchers:[], redemptions:[]
