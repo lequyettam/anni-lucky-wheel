@@ -1,4 +1,14 @@
-# Kiểm tra phiên bản 0.8.0
+# Kiểm tra phiên bản 0.9.0
+
+## Kho mã voucher nhập sẵn 0.9.0
+
+- 83/83 kiểm thử tự động đạt: giữ 69 trường hợp trước và thêm 14 trường hợp về parser, trùng mã, tồn kho, cấp đồng thời, retry, bản nháp cũ, bổ sung mã, voucher đã dùng/hết hạn, đối chiếu mã nội bộ/ngoài, quyền, rollback, tải lại dữ liệu và escape lời nhắn.
+- Kiểm thử 6 yêu cầu quay đồng thời với 5 mã: chỉ 5 voucher nhận 5 mã khác nhau; lượt còn lại nhận ô không trúng theo quy tắc tồn kho. Retry không cấp thêm mã. Snapshot quà/vòng quay không chứa danh sách mã chưa cấp.
+- Browser QA trên dữ liệu và phiên tổng hợp tách biệt: nhập 5 mã bằng danh sách, nhập CSV nối thêm 2 mã, chặn mã trùng khác hoa/thường, xem trước lời nhắn, lưu cấu hình. Quay trúng nhận chính xác `AU79j090`, giữ nguyên chữ hoa/thường, lời nhắn thay đúng biến; sao chép trả về đúng mã.
+- Ví quà được kiểm tra ở khung điện thoại 390px và 320px; màn hình 320px có client/scroll width 305/305 (trừ thanh cuộn), không tràn ngang. Xác nhận dùng chuyển voucher sang đã dùng, khóa nút dùng lại; nhân viên chỉ xem tra cứu bằng mã khác hoa/thường được cùng voucher và không thấy cấu hình quản trị.
+- Mở lại phần thưởng sau lượt trúng: 4 mã chưa cấp, 1 mã đã cấp; mã đã cấp không còn trong danh sách sửa. Không thay đổi dữ liệu của người dùng trong QA.
+- Bản HTML độc lập đóng gói từ cùng mô-đun mở được trong trình duyệt. Các fixture QA được loại khỏi thư mục xuất bản trước build cuối.
+- Phạm vi vẫn là localStorage. Kiểm thử này không chứng minh đồng bộ nhiều thiết bị hoặc đồng bộ trạng thái với app mua hàng; cần kiểm thử backend/MariaDB và tích hợp riêng khi chuyển máy chủ.
 
 
 ## Hoàn thiện nội dung giao diện 0.8.0

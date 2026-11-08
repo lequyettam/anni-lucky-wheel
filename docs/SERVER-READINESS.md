@@ -1,4 +1,10 @@
-# Chuẩn bị triển khai máy chủ riêng · 0.8.0
+# Chuẩn bị triển khai máy chủ riêng · 0.9.0
+
+## Bổ sung kho mã voucher 0.9.0
+
+Đã có giao diện nhập mã theo phần thưởng và luồng cấp một mã cho mỗi lượt trúng trong cùng dữ liệu trình duyệt. Trước khi dùng mã có giá trị thật, chuyển kho mã lên MariaDB, giới hạn quyền đọc/import, chống trùng bằng unique constraint và cấp mã trong giao dịch quay có khóa. Không đưa mã chưa cấp vào phản hồi API khách, GitHub hoặc gói frontend. Chỉ nhập mã thật mới sau khi backend được nghiệm thu; không dùng dữ liệu mã thử của trình duyệt để khởi tạo kho vận hành.
+
+Nếu dùng mã trên app mua hàng, cần xác nhận nguồn phát hành mã, phạm vi/hạn dùng và kết nối đồng bộ trạng thái bằng API/webhook. Hiện tại hệ thống chỉ hiển thị mã cùng hướng dẫn; xác nhận ở ANNI không thu hồi mã bên ngoài, và đổi mã bên ngoài không tự đánh dấu tại ANNI.
 
 ## Bản hiện tại
 

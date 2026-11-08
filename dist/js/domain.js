@@ -1,3 +1,4 @@
+import {validateRewardCodePools,usesRewardCodes,prizeForAward,prizeRevision,formatCodeMessage,matchesVoucherCode,rewardCodeKey} from './reward-codes.js';
 import {PRIZE_TERMS} from './release-copy.js';
 import {requirePermission} from './access-policy.js';
 import {isThemeId} from './themes.js';
@@ -43,6 +44,7 @@ export async function digest(value) {
   return Array.from(new Uint8Array(buffer), b => b.toString(16).padStart(2, '0')).join('');
 }
 export function validatePrizes(prizes) {
+  validateRewardCodePools(prizes);
   if (prizes.length < 2 || prizes.length > 12) throw new RuleError('Vòng quay cần từ 2 đến 12 ô để dễ đọc trên điện thoại.');
   if (new Set(prizes.map(p => p.id)).size !== prizes.length) throw new RuleError('Mã phần thưởng bị trùng.');
   for (const prize of prizes) {
@@ -59,7 +61,7 @@ export function validatePrizes(prizes) {
 }
 export class ProbabilityPolicy {
   static weights(prizes, mode = 'weighted') {
-    const live = p => p.kind === 'lose' || p.stock > 0;
+    const live = p => p.kind === 'lose' || (p.stock > 0 && (!usesRewardCodes(p) || p.voucherCodes?.length > 0));
     if (mode === 'uniform') {
       const count = prizes.filter(p => live(p) && p.weight > 0).length;
       if (!count) throw new RuleError('Hết kết quả có thể quay. Chiến dịch đang tạm dừng.');
@@ -150,16 +152,22 @@ export class GameService {
       if (!['free','earned'].includes(source)) throw new RuleError('Nguồn lượt quay không hợp lệ.');
       const balance = this.balance(userId, state);
       if (balance[source] <= 0) throw new RuleError(source === 'free' ? 'Bạn đã dùng hết lượt miễn phí hôm nay. Hãy nhập mã từ thu ngân để nhận thêm lượt.' : 'Bạn chưa có lượt từ hóa đơn còn hiệu lực.');
+      validateRewardCodePools(state.prizes,state.vouchers);
       const prize = ProbabilityPolicy.pick(state.prizes, cfg.mode, this.random);
       if (!prize) throw new RuleError('Chưa có phần thưởng có thể quay.');
       if (source === 'earned') state.credits.filter(c => c.userId === userId && c.remaining > 0 && +new Date(c.expiresAt) > +now).sort((a,b) => a.expiresAt.localeCompare(b.expiresAt))[0].remaining--;
-      const spin = {id:token('S'), requestId, userId, phone:user.phone, source, day:vnDay(now), at:now.toISOString(), prize:clone(prize)};
+      const spin = {id:token('S'), requestId, userId, phone:user.phone, source, day:vnDay(now), at:now.toISOString(), prize:prizeForAward(prize)};
       state.spins.push(spin);
       let voucher = null, newRecovery = null;
       if (prize.kind !== 'lose') {
-        state.prizes.find(p => p.id === prize.id).stock--;
-        let code; do { code = token('AC-', 10); } while (state.vouchers.some(v => v.code === code));
-        voucher = {id:token('V'), code, userId, spinId:spin.id, prize:clone(prize), branch:cfg.branch, at:now.toISOString(), expiresAt:new Date(+now + prize.days * 86400000).toISOString(), redeemedAt:null, redeemedBy:null};
+        const inventory=state.prizes.find(p => p.id === prize.id);
+        const externalCode=usesRewardCodes(inventory)?inventory.voucherCodes.shift():null;
+        inventory.stock--;state.prizesRevision=prizeRevision(state)+1;
+        const reserved=new Set(state.prizes.flatMap(p=>p.voucherCodes||[]).map(rewardCodeKey));
+        if(externalCode)reserved.add(rewardCodeKey(externalCode));
+        let code; do { code = token('AC-', 10); } while (reserved.has(code)||state.vouchers.some(v => matchesVoucherCode(v,code)));
+        voucher = {id:token('V'), code, userId, spinId:spin.id, prize:prizeForAward(prize), branch:cfg.branch, at:now.toISOString(), expiresAt:new Date(+now + prize.days * 86400000).toISOString(), redeemedAt:null, redeemedBy:null};
+        if(externalCode){voucher.externalCode=externalCode;voucher.externalMessage=formatCodeMessage(prize.codeMessage,externalCode);}
         state.vouchers.push(voucher);
         if (!user.recoveryHash) { user.recoveryHash = recoveryHash; newRecovery = recoveryCode; }
       }
@@ -184,7 +192,7 @@ export class GameService {
       const staff = actor.type === 'staff' ? requirePermission(state,this.staffSession(),'vouchers.redeem',now) : null;
       const customer = actor.type === 'customer' ? state.users.find(u => u.id === actor.userId) : null;
       if (actor.type === 'customer' && !customer) throw new RuleError('Vui lòng đăng nhập để sử dụng voucher.');
-      const voucher = state.vouchers.find(v => v.code === String(input ?? '').trim().toUpperCase());
+      const voucher = state.vouchers.find(v => matchesVoucherCode(v,input));
       if (!voucher) throw new RuleError('Không tìm thấy voucher.');
       if (customer && voucher.userId !== customer.id) throw new RuleError('Bạn chỉ có thể sử dụng voucher trong ví của mình.');
       if (voucher.redeemedAt) throw new RuleError('Voucher đã được sử dụng.');
@@ -200,7 +208,16 @@ export class GameService {
       return voucher;
     });
   }
-  async savePrizes(prizes) { validatePrizes(prizes); return this.repository.transaction(state => {requirePermission(state,this.staffSession(),'prizes.edit',this.clock());state.prizes = clone(prizes); return true;}); }
+  async savePrizes(prizes,expectedRevision) {
+    const checked=clone(prizes);validatePrizes(checked);
+    return this.repository.transaction(state => {
+      requirePermission(state,this.staffSession(),'prizes.edit',this.clock());
+      const revision=prizeRevision(state),needsRevision=checked.some(usesRewardCodes)||state.prizes.some(usesRewardCodes);
+      if((expectedRevision!==undefined||needsRevision)&&expectedRevision!==revision)throw new RuleError('Phần thưởng hoặc tồn mã đã thay đổi. Hãy bấm Hủy thay đổi để tải danh sách mới rồi chỉnh lại.');
+      validateRewardCodePools(checked,state.vouchers);
+      state.prizes=checked;state.prizesRevision=revision+1;return true;
+    });
+  }
   async saveAppearance(appearance) {
     if(!appearance || !isThemeId(appearance.theme) || typeof appearance.decorations!=='boolean') throw new RuleError('Vui lòng chọn một chủ đề hợp lệ.');
     const saved={theme:appearance.theme,decorations:appearance.decorations};

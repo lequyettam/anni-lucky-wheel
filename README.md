@@ -1,6 +1,6 @@
 # ANNI COFFEE · Vòng quay may mắn
 
-Phiên bản 0.8.0 hoàn thiện nội dung giao diện để kiểm tra trước khi chuyển lên máy chủ riêng.
+Phiên bản 0.9.0 bổ sung kho mã voucher nhập sẵn cho từng phần thưởng, kèm lời hướng dẫn tùy chọn khi cấp quà.
 
 **Hiện trạng kỹ thuật:** ứng dụng vẫn lưu dữ liệu trong trình duyệt. Việc bỏ nhãn thử nghiệm không bổ sung backend, đồng bộ thiết bị hay bảo mật máy chủ. Xem [kế hoạch chuyển máy chủ](docs/SERVER-READINESS.md) trước khi vận hành với khách hàng thật.
 
@@ -11,6 +11,24 @@ Mở ứng dụng: https://lequyettam.github.io/anni-lucky-wheel/
 - Mở bản `ANNI-COFFEE.html` trong Chrome, Edge hoặc Safari. Bản này được sinh tự động từ cùng mã nguồn, không phải một bản code riêng.
 - Hoặc phục vụ thư mục `dist` bằng máy chủ tĩnh. Ví dụ: `python3 -m http.server 8080 --directory dist`, rồi mở `http://localhost:8080`.
 - Mở **Quản trị** trên laptop hoặc đường dẫn `#admin` trên điện thoại. Nhân viên đăng nhập và chỉ thấy các mục được cấp quyền. Tài khoản hiện được lưu và kiểm tra trong trình duyệt.
+
+## Mã voucher nhập sẵn 0.9.0
+
+Vào **Quản trị → Phần thưởng → Chỉnh phần thưởng** (hoặc thêm quà mới):
+
+1. Trong **Cách cấp mã**, chọn **Dùng mã voucher nhập sẵn**.
+2. Dán danh sách, ví dụ `AU79j090, SI9806, Q0O808, SA92U0, GA9H00`, hoặc nhập tệp TXT/CSV UTF-8 không có dòng tiêu đề. Tệp được nối vào danh sách đang sửa; lỗi hoặc mã trùng sẽ không ghi đè danh sách cũ.
+3. Số quà tự bằng số mã chưa cấp: nhập 5 mã thì có 5 phần quà. Có thể bổ sung mã mới về sau. Danh sách sửa chỉ chứa mã chưa cấp; số đã cấp hiện riêng.
+4. Nhập lời hướng dẫn nếu cần, ví dụ `Vui lòng sử dụng mã Voucher #mã tại quầy hoặc app mua hàng`. `#mã` hoặc `{code}` được thay bằng mã được cấp; để trống thì không hiện lời hướng dẫn.
+5. Bấm **Áp dụng vào bản nháp**, rồi **Lưu phần thưởng**. Tổng tỷ lệ vẫn phải đúng 100%.
+
+Mỗi lượt trúng cấp mã chưa dùng đầu tiên trong danh sách, đồng thời giảm tồn quà. Mã xuất hiện ở kết quả quay, ví quà và chi tiết voucher, có nút sao chép. Hết mã thì quà hết tồn và áp dụng quy tắc chia lại tỷ lệ hiện có. Mỗi loại quà có tối đa 1.000 mã chưa cấp; mỗi mã dài 1–64 ký tự chữ không dấu, số, dấu `.`, `_`, `-`; tệp tối đa 100 KB. Mã giữ nguyên chữ hoa/thường và số 0 đầu; kiểm tra trùng không phân biệt hoa/thường, kể cả giữa các quà và mã đã cấp.
+
+Mã đã cấp không được đưa lại vào kho, kể cả voucher đã dùng/hết hạn hoặc quà bị xóa. Sửa tên quà hay lời hướng dẫn không thay đổi voucher cũ. Bản nháp mở trước một lượt trúng bị chặn lưu để tránh làm sống lại mã đã cấp; bấm **Hủy thay đổi** và chỉnh lại từ tồn mới.
+
+Mã `AC-…` vẫn là mã theo dõi nội bộ; nhân viên tìm/tra cứu bằng cả mã nhập sẵn lẫn mã theo dõi. Cả hai trỏ đến cùng voucher và trạng thái sử dụng một lần. Báo cáo CSV có cột riêng cho hai mã và lời hướng dẫn. Nhân viên chỉ xem không được nhập mã hay xác nhận sử dụng.
+
+**Phạm vi:** mã dùng trên app mua hàng phải được tạo và có hiệu lực ở app đó. Tính năng này cấp mã và hiển thị hướng dẫn, chưa kết nối API để đồng bộ trạng thái sử dụng với hệ thống mua hàng. Kho mã hiện vẫn ở trình duyệt; chống cấp trùng giữa các thiết bị cần backend và cơ sở dữ liệu chung trước khi nhập mã có giá trị thật.
 
 ## Nhân viên & phân quyền 0.7.0
 
@@ -107,11 +125,13 @@ Kho lưu trữ và lịch sử Git không chứa dữ liệu người chơi, mã
 - `dist/js/staff.js`: lớp `StaffService` quản lý tài khoản, phiên demo, thu hồi quyền và audit.
 - `dist/js/staff-ui.js`: giao diện đăng nhập, bảng nhân viên, cấp quyền và nhật ký.
 - `dist/js/domain.js`: các lớp `GameService`, `ProbabilityPolicy`, `MemoryRepository`; hàm thuần kiểm tra dữ liệu, thời gian, tỷ lệ.
+- `dist/js/reward-codes.js`: phân tích danh sách, kiểm tra kho mã, khớp mã và tạo bản chụp chỉ chứa thông tin quà đã cấp.
+- `dist/js/reward-code-ui.js`: nhập TXT/CSV, xem trước lời hướng dẫn và hiển thị mã nhận quà.
 - `dist/js/storage.js`: adapter `LocalRepository`, tuần tự hóa thao tác và dùng Web Locks khi trình duyệt hỗ trợ.
 - `dist/js/visuals.js`: `WheelRenderer`, `SoundController`, icon và định dạng.
 - `dist/js/app.js`: controller giao diện và các màn hình, không tự tính kết quả ngoài `GameService`.
 - `dist/js/release-copy.js`: chuyển cách hiển thị các câu mặc định cũ; không ghi đè nội dung riêng hoặc bản ghi voucher.
-- `tests/`: 69 kiểm thử nghiệp vụ, chủ đề, nội dung, phục hồi và tranh chấp lưu.
+- `tests/`: 83 kiểm thử nghiệp vụ, chủ đề, nội dung, phục hồi, kho mã và tranh chấp lưu.
 - `scripts/package.mjs`: sinh bản HTML độc lập từ các mô-đun.
 - `scripts/prepare-pages.mjs`: tạo bản xuất bản `release/pages`, gắn cùng mã phiên bản theo nội dung cho CSS và mọi mô-đun JavaScript để tránh bộ nhớ đệm trộn mã cũ/mới.
 - `docs/ARCHITECTURE.md`: định hướng chuyển sang Laravel + MySQL.

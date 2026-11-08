@@ -1,5 +1,17 @@
 # Quyết định kiến trúc · ANNI COFFEE Lucky Wheel
 
+## Kho mã nhận quà 0.9.0
+
+Phần thưởng có `codeMode: automatic | imported`. Chế độ imported giữ `voucherCodes` (chỉ mã chưa cấp) và `codeMessage` (chữ thuần, tùy chọn). Tồn quà luôn bằng độ dài danh sách. `reward-codes.js` chứa parser, validation, khóa so sánh không phân biệt hoa/thường và tạo snapshot không mang theo kho mã. `reward-code-ui.js` quản lý nhập tệp, xem trước và khối mã nhận quà; controller không quyết định mã được cấp.
+
+`GameService.spin` kiểm tra toàn bộ kho mã trong transaction, lấy mã đầu tiên, trừ quà/lượt, tăng `prizesRevision`, tạo voucher có `externalCode` và `externalMessage` đã thay biến. Snapshot quà/lịch sử quay không chứa mã chưa cấp. Retry cùng request trả lại kết quả cũ. Mã nội bộ tránh cả mã nhập sẵn và mã đã cấp. Mọi voucher, kể cả hết hạn/đã dùng, giữ mã để chống nhập lại. Xóa quà không xóa bản ghi voucher.
+
+`savePrizes` kiểm tra phiên và quyền trong transaction, so khớp revision trước khi ghi; chế độ nhập mã bắt buộc revision. Kiểm tra trùng toàn bộ danh mục và voucher mới nhất để bản nháp cũ không phục hồi mã đã cấp. UI luôn gửi revision, kể cả quà dùng mã tự sinh. Khách và nhân viên đổi mã qua cùng trạng thái voucher; mã nhập sẵn và mã nội bộ đều tra được cùng bản ghi. Lời nhắn được escape, không thực thi HTML.
+
+Khi chuyển sang máy chủ: thêm bảng mã theo campaign/prize với `code_original`, `code_normalized`, trạng thái, voucher được cấp và thời điểm cấp; unique constraint cho mã chuẩn hóa trong phạm vi cửa hàng. Giữ liên kết mã đã cấp khi ngừng/xóa mềm quà. Khóa bản ghi mã còn trống và tồn quà trong cùng giao dịch với lượt quay, dùng khóa idempotency và unique voucher/code để chỉ cấp một lần. Không gửi kho mã chưa cấp trong API công khai hoặc snapshot phần thưởng của khách; import/xuất kho chỉ qua quyền quản trị phù hợp và audit. Kiểm thử hai thiết bị tranh phần quà cuối bằng MariaDB thật.
+
+Hiện tại đây vẫn là kho dữ liệu trình duyệt, không phải ranh giới bảo mật hay kho dùng chung giữa thiết bị. Việc khách dùng mã trên app mua hàng không tự chuyển trạng thái tại ANNI: cần API/webhook có xác thực, xử lý retry/idempotency và chính sách đối soát riêng. Mã nhập vào phải tồn tại/hợp lệ trên hệ thống mua hàng; thao tác import không tạo mã ở hệ thống đó.
+
 ## Phạm vi đã thống nhất
 
 Khách chơi trên điện thoại; quản trị chủ yếu trên laptop. V1 dùng quà mẫu và kiểm tra định dạng số điện thoại, chưa OTP. Lượt miễn phí/ngày và mã cấp lượt do quản trị cấu hình. Thu ngân cung cấp mã. Khôi phục bằng số điện thoại + mã khôi phục. Voucher dùng tại cửa hàng.
