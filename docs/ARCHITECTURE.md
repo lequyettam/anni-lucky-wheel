@@ -1,4 +1,16 @@
-# Quyết định kiến trúc · ANNI COFFEE Lucky Wheel
+# Kiến trúc ANNI Lucky Wheel
+
+## Bản VPS 1.0.0-rc.1
+
+Hợp đồng hiện hành: **[SERVER-API.md](SERVER-API.md)**. Backend Laravel 13 nằm trong `server/`; MariaDB là nguồn dữ liệu chung. UI nhận adapter HTTP, không dùng RNG/localStorage để cấp quà khi chạy bản máy chủ. Các lớp nghiệp vụ tách nhận diện, quyền, chiến dịch, quay/đổi quà, xác thực và snapshot; controller chỉ điều phối request. Hàm thuần dùng cho xác suất/định dạng, class dùng cho dịch vụ/phụ thuộc.
+
+Mọi ghi nghiệp vụ dùng InnoDB transaction, khóa chiến dịch và kiểm tra quyền trong transaction. Unique constraints giữ requestId theo khách, namespace mã và một redemption/voucher. Cài đặt DB bằng config/env; bootstrap admin qua CLI. Đồng bộ UI bằng polling 15 giây và sau thao tác. Mật khẩu/mã khôi phục Argon2id; cookie HttpOnly/Secure, session DB và CSRF.
+
+Đây là hệ thống một chiến dịch. Khóa ghi cấp chiến dịch và snapshot đầy đủ ưu tiên tính nhất quán; đội code cần phân trang/tổng hợp báo cáo và đo tải trước quy mô lớn. Hướng dẫn triển khai, sao lưu và nghiệm thu: [DEPLOY-VPS-MARIADB.md](DEPLOY-VPS-MARIADB.md).
+
+## Lịch sử thiết kế bản tĩnh 0.1–0.9
+
+Phần dưới lưu các quyết định của bản tĩnh và đề xuất ở thời điểm đó. Các đoạn “khi chuyển máy chủ”, endpoint “dự kiến” và giới hạn localStorage là **lịch sử**, không mô tả backend 1.0 hiện hành. Dùng SERVER-API.md làm nguồn chính khi tích hợp.
 
 ## Kho mã nhận quà 0.9.0
 

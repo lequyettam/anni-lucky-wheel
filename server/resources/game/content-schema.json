@@ -1,0 +1,319 @@
+{
+  "brand": [
+    {
+      "key": "name",
+      "label": "Tên thương hiệu",
+      "value": "ANNI COFFEE",
+      "max": 60,
+      "optional": true
+    },
+    {
+      "key": "shortName",
+      "label": "Tên rút gọn (tùy chọn)",
+      "value": "",
+      "max": 24,
+      "optional": true
+    },
+    {
+      "key": "slogan",
+      "label": "Khẩu hiệu ở chân trang",
+      "value": "Cà phê chất lượng từ vùng Tây Nguyên",
+      "max": 180,
+      "optional": true
+    }
+  ],
+  "text": [
+    {
+      "key": "gameTitle",
+      "label": "Tên ứng dụng",
+      "value": "Vòng quay may mắn",
+      "max": 50
+    },
+    {
+      "key": "spinButton",
+      "label": "Nhãn nút quay",
+      "value": "QUAY NGAY",
+      "max": 20
+    },
+    {
+      "key": "codeButton",
+      "label": "Nhãn nút nhập mã",
+      "value": "Nhập mã",
+      "max": 18
+    },
+    {
+      "key": "heroNote",
+      "label": "Dòng nhắn dưới phần giới thiệu",
+      "value": "Cà phê ngon hơn khi có niềm vui đi cùng.",
+      "max": 150
+    },
+    {
+      "key": "codeHint",
+      "label": "Lời mời nhập mã",
+      "value": "Có mã từ thu ngân? Nhập mã tại đây",
+      "max": 150
+    },
+    {
+      "key": "rewardsEyebrow",
+      "label": "Dòng dẫn khu quà tặng",
+      "value": "Những điều dễ thương đang chờ",
+      "max": 80
+    },
+    {
+      "key": "rewardsTitle",
+      "label": "Tiêu đề khu quà tặng",
+      "value": "Quà nhỏ, vui thật.",
+      "max": 80
+    },
+    {
+      "key": "loginTitle",
+      "label": "Lời chào khi đăng nhập",
+      "value": "Chào bạn, {shortBrand} đây.",
+      "max": 90
+    },
+    {
+      "key": "loginIntro",
+      "label": "Giới thiệu đăng nhập",
+      "value": "Nhập số điện thoại để nhận lượt quay và lưu những món quà của bạn.",
+      "max": 300,
+      "multiline": true
+    },
+    {
+      "key": "codeTitle",
+      "label": "Tiêu đề hộp nhập mã",
+      "value": "Thêm lượt, thêm vui.",
+      "max": 80
+    },
+    {
+      "key": "codeIntro",
+      "label": "Hướng dẫn nhập mã",
+      "value": "Nhập mã thu ngân cung cấp để nhận thêm lượt quay. Mỗi mã có giới hạn và thời hạn riêng.",
+      "max": 300,
+      "multiline": true
+    },
+    {
+      "key": "walletTitle",
+      "label": "Tên trang ví quà",
+      "value": "Quà của tôi",
+      "max": 30
+    },
+    {
+      "key": "walletEyebrow",
+      "label": "Dòng dẫn ví quà",
+      "value": "Gửi bạn một chút ngọt ngào",
+      "max": 80
+    },
+    {
+      "key": "walletGreeting",
+      "label": "Lời chào khách đã đăng nhập",
+      "value": "Xin chào {customer}. Những món quà đang chờ bạn ghé {shortBrand}.",
+      "max": 240,
+      "multiline": true
+    },
+    {
+      "key": "walletLogin",
+      "label": "Lời mời đăng nhập",
+      "value": "Nhập số điện thoại để xem những món quà của bạn.",
+      "max": 240,
+      "multiline": true
+    },
+    {
+      "key": "walletEmptyTitle",
+      "label": "Tiêu đề ví chưa có quà",
+      "value": "Một chiếc ví đang chờ quà",
+      "max": 80
+    },
+    {
+      "key": "walletEmptyBody",
+      "label": "Giới thiệu ví chưa có quà",
+      "value": "Thử một vòng quay để nhận món quà đầu tiên từ {shortBrand}.",
+      "max": 240,
+      "multiline": true
+    },
+    {
+      "key": "voucherUseIntro",
+      "label": "Lời nhắc trước khi dùng voucher",
+      "value": "Chỉ xác nhận sử dụng khi đổi quà tại quầy {brand}.",
+      "max": 240,
+      "multiline": true
+    },
+    {
+      "key": "winEyebrow",
+      "label": "Dòng chúc mừng",
+      "value": "MỘT MÓN QUÀ DÀNH RIÊNG CHO BẠN",
+      "max": 90
+    },
+    {
+      "key": "winMessage",
+      "label": "Thông báo đã lưu quà",
+      "value": "Chúc mừng bạn! Voucher đã được lưu vào ví quà.",
+      "max": 240,
+      "multiline": true
+    },
+    {
+      "key": "loseEyebrow",
+      "label": "Dòng nhắn khi chưa trúng",
+      "value": "MAY MẮN SẼ SỚM GHÉ THĂM",
+      "max": 90
+    },
+    {
+      "key": "loseTitle",
+      "label": "Tiêu đề khi chưa trúng",
+      "value": "Hẹn bạn ở vòng quay sau.",
+      "max": 90
+    },
+    {
+      "key": "walletButton",
+      "label": "Nút mở ví quà",
+      "value": "Xem quà của tôi",
+      "max": 30
+    },
+    {
+      "key": "continueButton",
+      "label": "Nút chơi tiếp",
+      "value": "Tiếp tục khám phá",
+      "max": 30
+    },
+    {
+      "key": "rulesNav",
+      "label": "Tên mục thể lệ",
+      "value": "Thể lệ",
+      "max": 25
+    },
+    {
+      "key": "rulesEyebrow",
+      "label": "Dòng dẫn trang thể lệ",
+      "value": "Một chút thông tin trước khi chơi",
+      "max": 80
+    },
+    {
+      "key": "rulesTitle",
+      "label": "Tiêu đề trang thể lệ",
+      "value": "Chơi vui, nhận quà dễ.",
+      "max": 90
+    },
+    {
+      "key": "rulesIntro",
+      "label": "Giới thiệu thể lệ",
+      "value": "Tìm hiểu cách nhận lượt quay, nhận quà và sử dụng voucher tại cửa hàng.",
+      "max": 300,
+      "multiline": true
+    },
+    {
+      "key": "rulesLeadTitle",
+      "label": "Tiêu đề khối giới thiệu",
+      "value": "May mắn bắt đầu từ một lần ghé.",
+      "max": 100
+    },
+    {
+      "key": "rulesLeadBody",
+      "label": "Nội dung khối giới thiệu",
+      "value": "Nhận lượt quay, chạm vào vòng quay và lưu lại món quà của bạn. Mang voucher đến {brand} và nhờ nhân viên hỗ trợ đổi quà.",
+      "max": 600,
+      "multiline": true
+    },
+    {
+      "key": "rulesTurns",
+      "label": "Nhận lượt quay",
+      "value": "Mỗi số điện thoại có {dailyFree} lượt miễn phí mỗi ngày, làm mới lúc 00:00 giờ Việt Nam và không cộng dồn. Mã từ thu ngân cấp thêm lượt theo giới hạn riêng; lượt có ngày hết hạn. Chọn nguồn lượt trước khi quay.",
+      "max": 1000,
+      "multiline": true
+    },
+    {
+      "key": "rulesProbability",
+      "label": "Kết quả & tỷ lệ",
+      "value": "Kích thước các ô giúp dễ đọc; cơ hội trúng phụ thuộc tỷ lệ bên dưới. Khi quà hết, tỷ lệ được chia đều cho các ô còn hiệu lực có tỷ lệ gốc lớn hơn 1%, bao gồm ô không trúng. Tỷ lệ không đảm bảo số lần trúng trong một nhóm lượt cố định.",
+      "max": 1000,
+      "multiline": true
+    },
+    {
+      "key": "rulesVoucher",
+      "label": "Lưu & sử dụng voucher",
+      "value": "Quà được lưu sau khi có kết quả. Mỗi voucher có mã riêng, thời hạn và điều kiện áp dụng; khách bấm “Sử dụng voucher” tại quầy hoặc nhờ nhân viên đánh dấu đã sử dụng. Sau khi xác nhận, voucher chuyển sang “Đã sử dụng” và không thể dùng lại. Việc sửa phần thưởng sau này không thay đổi voucher đã cấp.",
+      "max": 1000,
+      "multiline": true
+    },
+    {
+      "key": "rulesRecovery",
+      "label": "Mã khôi phục & dữ liệu",
+      "value": "Hãy lưu mã khôi phục được cấp khi nhận quà lần đầu. Khi đăng nhập lại vào ví đã tạo, nhập số điện thoại và mã khôi phục của bạn. Giữ mã ở nơi riêng tư, không chia sẻ với người khác. Liên hệ cửa hàng nếu cần hỗ trợ.",
+      "max": 1000,
+      "multiline": true
+    }
+  ],
+  "theme": [
+    {
+      "key": "occasion",
+      "label": "Tên dịp lễ / dòng nhỏ trên đầu trang",
+      "value": "",
+      "max": 65
+    },
+    {
+      "key": "eyebrow",
+      "label": "Dòng dẫn trên laptop",
+      "value": "",
+      "max": 100
+    },
+    {
+      "key": "headline",
+      "label": "Tiêu đề chính trên laptop",
+      "value": "",
+      "max": 60
+    },
+    {
+      "key": "lead",
+      "label": "Từ nối ở dòng thứ hai",
+      "value": "",
+      "max": 30,
+      "optional": true
+    },
+    {
+      "key": "emphasis",
+      "label": "Dòng nhấn mạnh trên laptop",
+      "value": "",
+      "max": 70
+    },
+    {
+      "key": "mobileLead",
+      "label": "Tiêu đề chính trên điện thoại",
+      "value": "",
+      "max": 40
+    },
+    {
+      "key": "mobileEmphasis",
+      "label": "Dòng thứ hai trên điện thoại",
+      "value": "",
+      "max": 50
+    },
+    {
+      "key": "intro",
+      "label": "Giới thiệu dòng một",
+      "value": "",
+      "max": 200,
+      "multiline": true
+    },
+    {
+      "key": "subline",
+      "label": "Giới thiệu dòng hai",
+      "value": "",
+      "max": 200,
+      "multiline": true
+    },
+    {
+      "key": "message",
+      "label": "Lời chúc lễ hội / nhãn cạnh vòng quay",
+      "value": "",
+      "max": 90
+    }
+  ],
+  "themeIds": [
+    "anni",
+    "halloween",
+    "christmas",
+    "new-year",
+    "lunar-new-year",
+    "reunification",
+    "womens-day",
+    "teachers-day"
+  ]
+}

@@ -2,3 +2,17 @@ node_modules/
 release/
 .env
 *.log
+server/vendor/
+server/.env.*
+!server/.env.example
+server/.phpunit.cache/
+server/bootstrap/cache/*.php
+server/storage/**
+!server/storage/.gitignore
+server/public/js/
+server/public/assets/
+server/public/styles.css
+server/resources/views/app.blade.php
+.openai/
+
+/server/.pint.cache

@@ -1,4 +1,19 @@
-# Kiểm tra phiên bản 0.9.0
+# Kiểm tra bản VPS 1.0.0-rc.1
+
+Ngày 09/11/2026, kiểm tra trong môi trường riêng, không dùng VPS hoặc dữ liệu khách thật của ANNI.
+
+- PHP 8.3.6, Laravel 13.40.0, MariaDB 10.11.14; dependencies khóa trong composer.lock.
+- **90/90 kiểm thử JavaScript đạt**, gồm adapter HTTP/CSRF, giữ request qua retry/reload, đăng ký mất phản hồi, quyền và bộ khởi tạo không có tồn/mã thật.
+- **29/29 kiểm thử API đạt, 144 assertions trên MariaDB**: quyền đọc/ghi, ví khác, mã trùng/đã cấp, tổng tỷ lệ, hết kho/hạn, bản nháp cũ, snapshot bất biến, đăng nhập/khôi phục, rate limit, thu hồi phiên, CSRF, CSV, mốc ngày VN và CLI cài đặt không ghi đè dữ liệu.
+- Kiểm thử tiến trình song song với MariaDB thật: 6 worker tranh quà cuối chỉ tạo 1 voucher, tồn về 0; 2 worker đổi cùng voucher bằng mã nội bộ/mã ngoài chỉ ghi 1 redemption; retry trả lại kết quả cũ, không cấp thêm quà/lượt.
+- Browser QA chạy frontend qua PHP/API/session MariaDB trên dữ liệu tổng hợp: quay nhận AU79j090 và lời nhắn đúng; ví lưu quà; xác nhận dùng khóa dùng lại; nhân viên chỉ xem thấy trạng thái mới, không có nút ghi hay menu khác; admin thấy số liệu chung, kho còn 4 mã, lưu danh mục thành công.
+- Lưu theme 20/11 và tên rút gọn qua API thành công; trang khách tải lại thể hiện giá trị đã lưu. Khung 390px và 320px không tràn ngang (client/scroll 375/375 và 305/305, có thanh cuộn). Không thay thế kiểm tra điện thoại thật.
+- `npm run build:server`, đóng gói HTML độc lập và kiểm tra định dạng PHP bằng Pint. `config:cache`, `route:cache`, `view:cache` và `anni:doctor` đều chạy thành công với DB kiểm tra.
+- Composer audit không báo advisory tại thời điểm cài; không phải kết luận kiểm toán bảo mật độc lập. Các route/tài khoản/máy chủ QA riêng không nằm trong source phát hành.
+
+**Chưa xác minh trên VPS thực tế:** PHP-FPM/cPanel, chứng chỉ/DNS, quyền filesystem, backup/restore, mạng yếu trên thiết bị thật và tải dự kiến. Chưa có OTP hay đồng bộ với app mua hàng. Snapshot/báo cáo chưa phân trang server. Xem checklist [SERVER-READINESS.md](SERVER-READINESS.md).
+
+# Lịch sử kiểm tra bản tĩnh 0.1–0.9
 
 ## Kho mã voucher nhập sẵn 0.9.0
 

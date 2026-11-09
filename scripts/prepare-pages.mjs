@@ -17,7 +17,7 @@ await fs.mkdir(path.dirname(output),{recursive:true});
 await fs.cp(source,output,{recursive:true});
 for(const file of files.filter(file=>file.endsWith('.js'))){
   const code=contents.get(file).replace(/^(import\s+[^\n]+?\s+from\s+['"])(\.\/[^'"?]+\.js)(['"];)/gm,`$1$2?v=${version}$3`);
-  await fs.writeFile(path.join(output,file),code);
+  await fs.writeFile(path.join(output,file),code.replace(/import\('(.\/[^'?]+\.js)'\)/g,`import('$1?v=${version}')`));
 }
 let html=await fs.readFile(path.join(source,'index.html'),'utf8');
 for(const asset of ['styles.css','js/app.js']){
