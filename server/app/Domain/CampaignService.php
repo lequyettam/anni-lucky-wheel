@@ -123,7 +123,7 @@ final class CampaignService
                 Store::fail('Mã đã sử dụng không thể đổi tên.');
             }
             DB::table('turn_codes')->updateOrInsert(['id' => $id], ['code' => $data['code'], 'payload' => Store::json($data)]);
-            Store::audit($actor,'code',$id,'Mã cấp lượt');
+            Store::audit($actor, 'code', $id, 'Mã cấp lượt');
 
             return $data;
         });

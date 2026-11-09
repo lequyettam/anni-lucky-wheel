@@ -163,9 +163,9 @@ final class GameService
     {
         $data = $r->validate(['name' => 'required|string|min:2|max:80']);
 
-        return Store::transaction(function () use ($r,$data) {
+        return Store::transaction(function () use ($r, $data) {
             $u = Access::customer($r);
-            DB::table('customers')->where('id',$u->id)->update(['name' => trim($data['name'])]);
+            DB::table('customers')->where('id', $u->id)->update(['name' => trim($data['name'])]);
 
             return true;
         });

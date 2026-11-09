@@ -158,7 +158,7 @@ final class IdentityService
                 Store::fail('Mật khẩu hiện tại không đúng.');
             }
             DB::table('staff_accounts')->where('id', $staff->id)->update(['password' => Hash::make($data['password']), 'version' => $staff->version + 1]);
-            Store::audit($actor,'password',$staff->id,$staff->name);
+            Store::audit($actor, 'password', $staff->id, $staff->name);
             $r->session()->forget('staff');
 
             return true;

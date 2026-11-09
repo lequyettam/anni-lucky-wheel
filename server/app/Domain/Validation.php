@@ -14,7 +14,7 @@ final class Validation
             Store::fail('Nhập số di động Việt Nam hợp lệ gồm 10 chữ số.');
         }
 
-return $p;
+        return $p;
     }
 
     public static function image(mixed $value, int $max): string
@@ -90,7 +90,7 @@ return $p;
             }$result[] = $p;
         }
 
-return $result;
+        return $result;
     }
 
     public static function content(array $value): array
@@ -113,7 +113,7 @@ return $result;
                 $target[$f['key']] = $v;
             }
 
-return $target;
+            return $target;
         };
         $out['brand'] = $check($value['brand'] ?? [], $schema['brand']);
         $out['text'] = $check($value['text'] ?? [], $schema['text']);
@@ -127,7 +127,7 @@ return $target;
             $out['themes'][$id] = $check($value['themes'][$id] ?? [], $schema['theme']);
         }
 
-return $out;
+        return $out;
     }
 
     public static function themeIds(): array

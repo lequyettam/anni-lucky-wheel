@@ -49,6 +49,6 @@ final class Access
             abort_unless($user, 401, 'Vui lòng đăng nhập ví quà.');
         }
 
-return $user;
+        return $user;
     }
 }
