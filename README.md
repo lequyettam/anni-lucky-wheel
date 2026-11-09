@@ -1,164 +1,87 @@
 # ANNI COFFEE · Vòng quay may mắn
 
-Phiên bản 0.9.0 bổ sung kho mã voucher nhập sẵn cho từng phần thưởng, kèm lời hướng dẫn tùy chọn khi cấp quà.
+**1.0.0-rc.1: backend Laravel + MariaDB để đội code triển khai trên VPS riêng.** Giữ giao diện mobile, theme lễ hội, logo sáng/tối, nhân viên và kho mã voucher. Mã nguồn đã kiểm thử trong môi trường riêng; đội code cần cài đặt và nghiệm thu trên VPS trước khi mở chiến dịch thật.
 
-**Hiện trạng kỹ thuật:** ứng dụng vẫn lưu dữ liệu trong trình duyệt. Việc bỏ nhãn thử nghiệm không bổ sung backend, đồng bộ thiết bị hay bảo mật máy chủ. Xem [kế hoạch chuyển máy chủ](docs/SERVER-READINESS.md) trước khi vận hành với khách hàng thật.
+- [Hướng dẫn đầy đủ VPS Contabo / cPanel / MariaDB](docs/DEPLOY-VPS-MARIADB.md)
+- [Hợp đồng API, cấu trúc dữ liệu và giới hạn](docs/SERVER-API.md)
+- [Trạng thái bàn giao và việc cần nghiệm thu](docs/SERVER-READINESS.md)
+- [Kết quả kiểm thử](docs/VALIDATION.md)
 
-Mở ứng dụng: https://lequyettam.github.io/anni-lucky-wheel/
+## Chạy bản đồng bộ trên VPS
 
-## Chạy ứng dụng
+PHP >=8.3, Composer 2, MariaDB/InnoDB, HTTPS; Node 22 chỉ cần lúc build. Đội code cấu hình kết nối tại `server/config/database.php` và `.env` riêng trên máy chủ. **Không có màn hình khai báo database trong quản trị.**
 
-- Mở bản `ANNI-COFFEE.html` trong Chrome, Edge hoặc Safari. Bản này được sinh tự động từ cùng mã nguồn, không phải một bản code riêng.
-- Hoặc phục vụ thư mục `dist` bằng máy chủ tĩnh. Ví dụ: `python3 -m http.server 8080 --directory dist`, rồi mở `http://localhost:8080`.
-- Mở **Quản trị** trên laptop hoặc đường dẫn `#admin` trên điện thoại. Nhân viên đăng nhập và chỉ thấy các mục được cấp quyền. Tài khoản hiện được lưu và kiểm tra trong trình duyệt.
+```bash
+# Thư mục gốc dự án
+npm test
+npm run build:server
+cd server
+mkdir -p bootstrap/cache storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs
+composer install --no-dev --prefer-dist --optimize-autoloader
+cp .env.example .env
+# Sửa .env riêng trên VPS trước các lệnh sau
+php artisan key:generate
+php artisan migrate --force
+php artisan anni:install
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+php artisan anni:doctor
+```
 
-## Mã voucher nhập sẵn 0.9.0
-
-Vào **Quản trị → Phần thưởng → Chỉnh phần thưởng** (hoặc thêm quà mới):
-
-1. Trong **Cách cấp mã**, chọn **Dùng mã voucher nhập sẵn**.
-2. Dán danh sách, ví dụ `AU79j090, SI9806, Q0O808, SA92U0, GA9H00`, hoặc nhập tệp TXT/CSV UTF-8 không có dòng tiêu đề. Tệp được nối vào danh sách đang sửa; lỗi hoặc mã trùng sẽ không ghi đè danh sách cũ.
-3. Số quà tự bằng số mã chưa cấp: nhập 5 mã thì có 5 phần quà. Có thể bổ sung mã mới về sau. Danh sách sửa chỉ chứa mã chưa cấp; số đã cấp hiện riêng.
-4. Nhập lời hướng dẫn nếu cần, ví dụ `Vui lòng sử dụng mã Voucher #mã tại quầy hoặc app mua hàng`. `#mã` hoặc `{code}` được thay bằng mã được cấp; để trống thì không hiện lời hướng dẫn.
-5. Bấm **Áp dụng vào bản nháp**, rồi **Lưu phần thưởng**. Tổng tỷ lệ vẫn phải đúng 100%.
-
-Mỗi lượt trúng cấp mã chưa dùng đầu tiên trong danh sách, đồng thời giảm tồn quà. Mã xuất hiện ở kết quả quay, ví quà và chi tiết voucher, có nút sao chép. Hết mã thì quà hết tồn và áp dụng quy tắc chia lại tỷ lệ hiện có. Mỗi loại quà có tối đa 1.000 mã chưa cấp; mỗi mã dài 1–64 ký tự chữ không dấu, số, dấu `.`, `_`, `-`; tệp tối đa 100 KB. Mã giữ nguyên chữ hoa/thường và số 0 đầu; kiểm tra trùng không phân biệt hoa/thường, kể cả giữa các quà và mã đã cấp.
-
-Mã đã cấp không được đưa lại vào kho, kể cả voucher đã dùng/hết hạn hoặc quà bị xóa. Sửa tên quà hay lời hướng dẫn không thay đổi voucher cũ. Bản nháp mở trước một lượt trúng bị chặn lưu để tránh làm sống lại mã đã cấp; bấm **Hủy thay đổi** và chỉnh lại từ tồn mới.
-
-Mã `AC-…` vẫn là mã theo dõi nội bộ; nhân viên tìm/tra cứu bằng cả mã nhập sẵn lẫn mã theo dõi. Cả hai trỏ đến cùng voucher và trạng thái sử dụng một lần. Báo cáo CSV có cột riêng cho hai mã và lời hướng dẫn. Nhân viên chỉ xem không được nhập mã hay xác nhận sử dụng.
-
-**Phạm vi:** mã dùng trên app mua hàng phải được tạo và có hiệu lực ở app đó. Tính năng này cấp mã và hiển thị hướng dẫn, chưa kết nối API để đồng bộ trạng thái sử dụng với hệ thống mua hàng. Kho mã hiện vẫn ở trình duyệt; chống cấp trùng giữa các thiết bị cần backend và cơ sở dữ liệu chung trước khi nhập mã có giá trị thật.
-
-## Nhân viên & phân quyền 0.7.0
-
-Vào **Quản trị → Nhân viên & phân quyền** (`#admin/staff`). Lần đầu, tạo quản trị viên bằng tên, tên đăng nhập và mật khẩu riêng cho bản thử nghiệm (ít nhất 8 ký tự). Không có mật khẩu mặc định. Thao tác này giữ toàn bộ cấu hình, logo, lượt quay và voucher đã có.
-
-1. Bấm **Thêm nhân viên**, nhập thông tin và chọn nhóm mẫu: **Chỉ xem voucher**, **Thu ngân** hoặc **Quản trị viên**.
-2. Hai nhóm nhân viên mặc định chỉ mở trang **Voucher**. Chỉ xem được tìm theo tên/SĐT/mã và xem chi tiết; thu ngân được thêm quyền xác nhận sử dụng một lần. Không được sửa giá trị, hạn dùng hay phục hồi voucher đã dùng.
-3. Khi cần, cấp thêm quyền theo từng mục: **Không truy cập / Chỉ xem / Xem & chỉnh sửa**. Voucher tách quyền **Xác nhận sử dụng**, báo cáo tách quyền **Xuất CSV**. Cấp chỉnh sửa luôn gồm xem. Quản lý nhân viên chỉ dành cho quản trị viên.
-4. Bấm **Chỉnh sửa** trên tài khoản để đổi tên, quyền, đặt mật khẩu mới hoặc bỏ **Cho phép tài khoản đăng nhập** để khóa. Đổi mật khẩu/quyền/khóa sẽ kết thúc các phiên của tài khoản đó, kể cả tab đang mở. Không thể khóa hoặc hạ quyền quản trị viên hoạt động cuối cùng.
-5. **Nhật ký thao tác** ghi tài khoản thao tác, thời điểm, tài khoản được cập nhật và các xác nhận voucher. Ghi nhận tên/ID nhân viên từ phiên hiện tại, không nhập tay tên người xác nhận.
-6. Mỗi tab có phiên nhân viên riêng, tối đa 8 giờ; đăng xuất nhân viên không đăng xuất ví khách. Tài khoản nhân viên ở góc trên cho phép đổi mật khẩu bằng mật khẩu hiện tại và đăng xuất.
-
-Menu, trang qua đường dẫn trực tiếp, thao tác giao diện và các lệnh cập nhật trong service đều kiểm tra quyền. Mục chỉ xem cho phép chuyển nhóm nội dung/xem trước, khóa các trường và nút lưu. Tài khoản/quyền đổi ở tab khác được kiểm tra trước khi tiếp tục thao tác.
-
-**Phạm vi:** đây là mô phỏng phân quyền bằng dữ liệu trình duyệt, **không phải bảo mật phía máy chủ**. Tài khoản mới chỉ dùng trong cùng hồ sơ trình duyệt và cùng địa chỉ website; tạo trên laptop chưa đăng nhập được trên điện thoại khác. Không dùng mật khẩu thật của dịch vụ khác, dữ liệu khách thật hoặc quà thật. Xóa dữ liệu website sẽ mất cả tài khoản demo. Nếu quên mật khẩu, nhờ một quản trị viên khác đặt lại; bản demo không có luồng khôi phục quản trị viên duy nhất.
-
-Bản 0.8 bỏ chức năng nạp lại dữ liệu mẫu khỏi giao diện. Các chức năng khôi phục nội dung thương hiệu vẫn giữ nguyên. Cần API + cơ sở dữ liệu tập trung để áp dụng quyền và chống dùng lại voucher giữa các thiết bị.
-
-## Nội dung & thương hiệu 0.6
-
-Vào **Quản trị → Nội dung & thương hiệu** (`#admin/content`):
-
-1. Chọn nhóm **Thương hiệu**, **Lời chào theo theme**, **Trang chơi**, **Ví quà**, **Nhận thưởng** hoặc **Thể lệ**.
-2. Sửa tên, tên rút gọn, khẩu hiệu; tải ảnh vào **Logo dùng trên nền sáng** và **Logo dùng trên nền tối**. Mỗi ảnh PNG/JPG/WebP tối đa 2 MB, cạnh dài sau xử lý tối đa 512px và dung lượng tối đa 300 KB. Ưu tiên PNG/WebP trong suốt. Logo cũ được giữ ở ô nền sáng. Bấm **Xóa phiên bản này** để bỏ riêng một ảnh.
-3. Sửa nội dung và xem trước ngay. Lời chào lưu riêng cho từng theme; chọn theme trong trình biên tập chỉ đổi bản xem trước. Muốn đổi theme đang dùng, vào **Giao diện & chủ đề**.
-4. Bấm **Lưu nội dung** để áp dụng. Bản nháp được giữ khi đổi nhóm hoặc chuyển màn hình trong ứng dụng; tải lại/đóng trang sẽ bỏ bản nháp sau cảnh báo của trình duyệt. **Tải bản đang dùng** bỏ các chỉnh sửa chưa lưu.
-
-Logo được chọn theo **nền tại vị trí hiển thị**: đầu trang chơi của theme lễ hội dùng ảnh dành cho nền tối; tâm vòng quay, khu quản trị và voucher vẫn dùng ảnh dành cho nền sáng. Bản xem trước sử dụng cùng quy tắc, kể cả khi tắt hình nền lễ hội. Nếu chỉ có một ảnh, cả hai loại nền dùng chung ảnh đó; hệ thống không tự đổi màu logo. Biểu tượng tab trình duyệt chọn theo chế độ sáng/tối của hệ thống.
-
-Có ít nhất một logo thì **Tên thương hiệu** có thể để trống để chỉ hiện logo. Nếu xóa hết logo, cần nhập tên trước khi lưu. Tên rút gọn có thể giữ để dùng trong lời chào mà không hiện cạnh logo; nếu cả hai tên trống, các biến tên dùng “quán” và lời chào đăng nhập mặc định chuyển thành lời chào trung tính. Tên cạnh logo là 18px trên laptop, 16px trên điện thoại; tên dài tự xuống dòng. Logo giữ tỷ lệ ảnh.
-
-Các nút **Về gốc** bên từng trường, **Về gốc nhóm này**, **Đưa tất cả nội dung về gốc** và **Lấy bản lưu trước** đều đưa nội dung vào bản nháp trước. Kiểm tra rồi bấm **Lưu nội dung**. Hệ thống giữ **một bản lưu trước**, gồm cả hai phiên bản logo; lưu lại bản phục hồi cũng có thể quay lại phiên bản vừa thay thế. Không ảnh hưởng phần thưởng, tỷ lệ, lượt quay, tài khoản hoặc trạng thái voucher.
-
-Biến có sẵn: `{brand}`, `{shortBrand}`, `{customer}`, `{dailyFree}`. Nội dung hỗ trợ chữ và xuống dòng, không chèn mã HTML. Nên dùng tiêu đề ngắn trên điện thoại, tên rút gọn cho tâm vòng quay. Các thông báo trạng thái và lỗi là nội dung hệ thống. Tên/điều kiện/ảnh phần thưởng sửa tại **Phần thưởng**; tên cửa hàng đổi quà tại **Thiết lập**. Điều kiện trên voucher đã cấp giữ nguyên.
-
-Cấu hình chỉ lưu trong trình duyệt hiện tại, đồng bộ giữa các tab cùng nguồn; **chưa áp dụng chung cho thiết bị của khách**. Nếu hai tab sửa cùng lúc, bản cũ bị chặn lưu và cần tải bản đang dùng. Không cần xóa dữ liệu demo cũ để sử dụng tính năng mới.
-
-## Chủ đề lễ hội 0.5
-
-Vào **Quản trị → Giao diện & chủ đề** (`#admin/themes`):
-
-1. Chọn một trong tám chủ đề: **ANNI nguyên bản**, **Halloween**, **Giáng sinh**, **Tết Dương lịch**, **Tết Nguyên đán**, **Ngày Thống nhất 30/4**, **Quốc tế Phụ nữ 8/3**, **Ngày Nhà giáo 20/11**.
-2. Xem hình nền, vòng quay và lời chào trong khung điện thoại; bật/tắt **Hiện hình nền minh họa lễ hội**.
-3. Bấm **Áp dụng chủ đề** để lưu. **Hủy thay đổi** hoặc rời trang trước khi áp dụng sẽ bỏ bản nháp.
-4. Chọn **ANNI nguyên bản** để dùng lại màu phần thưởng đã cấu hình. Chủ đề lễ hội chỉ thay màu hiển thị, không ghi đè màu trong danh mục quà.
-
-Mỗi lễ hội có cảnh minh họa riêng, bảng màu, tiêu đề, vòng quay viền ánh kim, nút quay và thẻ nhận thưởng theo chủ đề. Tết dùng mai, đào, bánh chưng/bánh tét và lì xì; 30/4 dùng cờ đỏ sao vàng và hoa sen; 8/3 là vườn hoa; 20/11 là góc sách tri ân. Hình nền không bắt tương tác. Tên quà, điều kiện, ảnh quà và kết quả vẫn lấy từ dữ liệu động. Ảnh WebP 768×1152 khoảng 88–130 KB mỗi chủ đề; trang chơi chỉ tải cảnh đang dùng, ảnh thẻ quản trị tải lười. Bản HTML đóng gói nhúng toàn bộ ảnh nên dùng được khi không có máy chủ ảnh. Không tự đổi theo lịch; không thay đổi tỷ lệ, tồn quà, lượt quay hoặc voucher đã cấp. Quản trị giữ giao diện trung tính để dễ thao tác.
-
-**Phạm vi lưu trữ hiện tại:** cấu hình lưu trong trình duyệt hiện tại và cập nhật giữa các tab cùng nguồn khi không có thao tác/hộp thoại đang mở. Không áp dụng chung cho điện thoại của khách khác. Cần lưu cấu hình chiến dịch qua máy chủ để đồng bộ toàn bộ thiết bị.
-
-## Giao diện mobile 0.3
-
-- Mở trang là thấy vòng quay với tiêu đề gọn; ẩn phần giới thiệu dài và thẻ lượt quay trùng thao tác trên màn hình rộng tối đa 800px.
-- Thanh dưới có một nút quay, số lượt của nguồn đang chọn và nút **Nhập mã** có nhãn rõ ràng. Có cả hai nguồn thì hiện hai nút chọn; nguồn đang chọn hết lượt thì tự chọn nguồn còn lượt, không tự tiêu hao lượt.
-- Hết lượt hoặc tạm dừng: nút quay bị khóa, vẫn nhập mã được. Khách có thể mở **Vòng quay / Quà của tôi / Thể lệ / Tài khoản** từ điều hướng dưới.
-- Kích thước vòng quay và khoảng trống dưới nội dung dựa trên chiều cao màn hình, chiều cao thực của thanh điều khiển và vùng an toàn thiết bị. Màn hình quá thấp vẫn cho cuộn nội dung.
-- Danh sách quà nằm phía dưới màn hình chơi; nhãn trang trí không che các ô thưởng. Giao diện laptop giữ bố cục đầy đủ.
+Đây là tóm tắt, **đọc hướng dẫn cPanel trước khi chạy**. DocumentRoot phải là `server/public`, không phải gốc repository. `.env`, vendor và backup phải nằm ngoài web. Bản cài mới tạm dừng, tồn quà 0, không có khách hay mã mẫu. Không chạy `migrate:fresh` trên DB vận hành.
 
 ## Tính năng
 
-- Vòng quay responsive, âm thanh tổng hợp, hiệu ứng chúc mừng, tắt âm và giảm chuyển động theo hệ điều hành.
-- Số lượt miễn phí hằng ngày; reset theo giờ Việt Nam.
-- Nhiều mã do quản trị tạo: hạn mã, giới hạn tổng, mỗi SĐT theo ngày/toàn kỳ, lượt mỗi lần và hạn dùng lượt.
-- Quà có tên, tên ngắn, ảnh, màu, biểu tượng, điều kiện, hạn dùng, tồn kho, tỷ lệ.
-- Tổng tỷ lệ gốc đúng 100%; chia lại phần hết hàng cho các ô còn hiệu lực có tỷ lệ gốc > 1%, bao gồm ô không trúng. 0% bị tắt.
-- Chế độ chia đều hoặc ngẫu nhiên có trọng số; nếu không phân bổ được thì tạm dừng và không mất lượt.
-- Ví voucher, lưu tên, mã khôi phục; khách tự xác nhận sử dụng tại quầy; nhân viên có thể đánh dấu trực tiếp trong danh sách trúng hoặc tra cứu mã.
-- Hai cách xác nhận dùng chung trạng thái: chỉ chuyển một lần sang “Đã sử dụng”, lưu người xác nhận, nguồn khách/nhân viên và thời gian; báo cáo có lọc và xuất CSV.
-- Giữ nguyên điều kiện voucher đã cấp khi sửa danh mục quà.
+- Vòng quay phù hợp điện thoại, âm thanh, hiệu ứng chúc mừng, giảm chuyển động theo hệ điều hành; quản trị trên laptop.
+- Lượt miễn phí theo số điện thoại/ngày Việt Nam; mã do quản trị cấp có hạn, quota tổng, quota mỗi số và số lượt nhận.
+- Quà có ảnh, nội dung, điều kiện, hạn sử dụng, tồn và tỷ lệ; chế độ chia đều hoặc theo trọng số. Tổng tỷ lệ gốc bắt buộc 100%; phần hết quà chia cho ô còn hiệu lực có tỷ lệ gốc >1%, kể cả ô may mắn lần sau.
+- Ví quà bằng số điện thoại + mã khôi phục; khách và thu ngân cùng xác nhận một trạng thái sử dụng duy nhất, lưu nguồn/người/thời gian. Quà hết hạn hoặc đã dùng không dùng lại.
+- Mã voucher nhập sẵn từng quà, FIFO, không cấp trùng; nội dung hướng dẫn thay biến theo mã được cấp. Điều kiện/mã/lời hướng dẫn của voucher cũ giữ nguyên khi sửa danh mục.
+- Tám theme: ANNI, Halloween, Giáng sinh, Tết Dương lịch, Tết Nguyên đán, 30/4, 8/3, 20/11; minh họa và lời chào riêng.
+- Sửa/khôi phục nội dung thương hiệu, tên, logo nền sáng/nền tối; chỉ một logo thì dùng cho cả hai, có logo thì tên có thể để trống. Giữ một bản nội dung trước.
+- Nhân viên chỉ xem voucher, thu ngân hoặc quản trị; cấp quyền xem/chỉnh sửa theo mục, tách quyền đổi voucher và xuất báo cáo. Server kiểm tra quyền từng thao tác, không chỉ ẩn menu.
+- Báo cáo lọc/tìm và xuất CSV, audit, thu hồi phiên khi đổi mật khẩu/quyền hoặc khóa nhân viên; không khóa quản trị viên hoạt động cuối cùng.
 
-## Phạm vi vận hành hiện tại
+## Nhập kho mã nhận quà
 
-Dữ liệu lưu trong `localStorage` của trình duyệt, không phải máy chủ. Điện thoại và laptop không chia sẻ dữ liệu; mã khôi phục không thể khôi phục sau khi xóa dữ liệu trình duyệt. Code phía khách và quản trị có thể bị sửa. Không dùng để trao quà thật hay thu thập thông tin thật.
+1. Vào **Quản trị → Phần thưởng → Chỉnh phần thưởng**, chọn **Dùng mã voucher nhập sẵn**.
+2. Dán danh sách `AU79j090, SI9806, Q0O808, SA92U0, GA9H00` hoặc nhập TXT/CSV UTF-8 không tiêu đề. Mã giữ chữ hoa/thường và số 0 đầu; kiểm tra trùng không phân biệt hoa/thường.
+3. Số quà tự bằng số mã chưa cấp. Nhập 5 mã nghĩa là 5 phần quà; có thể bổ sung về sau. Mỗi loại tối đa 1.000 mã chưa cấp, mã dài 1–64 ký tự chữ/số/`.`/`_`/`-`, tệp tối đa 100 KB.
+4. Nhập lời hướng dẫn tùy chọn: `Vui lòng sử dụng mã Voucher #mã tại quầy hoặc app mua hàng`. `#mã` hoặc `{code}` thay bằng mã đã cấp; để trống thì không hiển thị.
+5. Bấm **Áp dụng vào bản nháp → Lưu phần thưởng**. Tổng tỷ lệ phải đúng 100%. Bản nháp cũ bị chặn nếu tồn/mã thay đổi; hủy thay đổi và tải lại trước khi sửa.
 
-Mã chi nhánh trên mã cấp lượt hiện là nhãn đối soát, không xác minh hóa đơn hay vị trí cửa hàng. Tài khoản hiện chưa OTP. Voucher dùng mã văn bản tại quầy; camera quét QR sẽ bổ sung khi triển khai máy chủ.
+Mã đã cấp không thể nhập lại, kể cả voucher hết hạn/đã dùng hoặc quà bị bỏ. Mã theo dõi `AC-…` và mã nhập sẵn tra về cùng voucher. Cấp mã dùng trên app mua hàng **chưa đồng bộ trạng thái với app đó**; mã phải được tạo/hợp lệ ở hệ thống đối tác trước.
 
-Kho lưu trữ và lịch sử Git không chứa dữ liệu người chơi, mã khôi phục hay phiên đăng nhập. Google Fonts là tùy chọn trang trí; nếu không tải được, app dùng font hệ thống.
+## Nhân viên, nội dung và đổi voucher
 
-## Sử dụng voucher
+- Quản trị viên đầu tiên được tạo bằng `php artisan anni:install` trên máy chủ, không có mật khẩu mặc định. Sau đó vào **Nhân viên & phân quyền** để thêm/sửa/khóa nhân viên. Mật khẩu mới tối thiểu 12 ký tự. Quên mật khẩu quản trị dùng lệnh CLI trong hướng dẫn VPS.
+- Nhân viên chỉ xem được tìm theo tên/SĐT/mã và xem chi tiết; thu ngân có thêm xác nhận đã dùng, không được sửa quyền lợi/hạn hoặc phục hồi voucher.
+- **Nội dung & thương hiệu** có nhóm thương hiệu, lời chào theo theme, trang chơi, ví, nhận thưởng và thể lệ. Các nút khôi phục đưa nội dung vào bản nháp; bấm lưu mới áp dụng. Biến: `{brand}`, `{shortBrand}`, `{customer}`, `{dailyFree}`; không chèn HTML.
+- Logo nhận PNG/JPG/WebP tối đa 2 MB đầu vào, tối ưu còn tối đa 300 KB/ảnh; phiên bản sáng/tối chọn theo nền tại vị trí hiển thị. Tên cạnh logo gọn và tự xuống dòng; ảnh giữ tỷ lệ.
+- **Giao diện & chủ đề** chọn theme, xem trước, bật/tắt hình nền rồi áp dụng. Không thay tỷ lệ, tồn hoặc quyền lợi voucher.
+- Khách vào **Quà của tôi → Sử dụng voucher → Xác nhận sử dụng** tại quầy. Thu ngân dùng **Voucher → Đánh dấu đã sử dụng** hoặc tra mã ở **Đổi voucher**. API kiểm tra cùng trạng thái trong transaction; hai yêu cầu đồng thời chỉ một yêu cầu thành công.
 
-1. Khách vào **Quà của tôi → Sử dụng voucher**, kiểm tra điều kiện, bấm **Xác nhận sử dụng** tại quầy. Bấm **Để sau** sẽ giữ nguyên voucher.
-2. Voucher chuyển sang **Đã sử dụng**, hiển thị thời gian và người xác nhận; không còn nút dùng lại. Voucher hết hạn không thể sử dụng.
-3. Nếu khách quên bấm: thu ngân đăng nhập vào **Voucher → Đánh dấu đã dùng** trên thẻ quà, kiểm tra khách/mã/quà rồi xác nhận. Hoặc nhập mã ở **Đổi voucher**.
-4. Trên cùng trình duyệt, khách và nhân viên dùng chung dữ liệu; các tab cùng nguồn cập nhật trạng thái qua sự kiện lưu trữ. Dữ liệu đã lưu từ bản 0.1 vẫn dùng được.
+Trên VPS, các thiết bị dùng chung MariaDB. Thao tác nhận kết quả ngay; thiết bị khác cập nhật khi mở lại trang/tab hoặc polling 15 giây. Không cấp thưởng offline. Mã khôi phục cấp ngay khi tạo ví, cần lưu riêng; chưa có OTP theo yêu cầu hiện tại.
 
-Để điện thoại khách và laptop thu ngân cùng biết voucher đã dùng, cần triển khai máy chủ và cơ sở dữ liệu chung. Bản GitHub Pages chưa làm được việc đó; chống dùng lại trong demo chỉ có hiệu lực trong dữ liệu của trình duyệt hiện tại.
+## Bản giao diện độc lập
 
-## Kiến trúc
+GitHub Pages: https://lequyettam.github.io/anni-lucky-wheel/ vẫn dùng localStorage, không đồng bộ với VPS. `npm run build` tạo Pages; `npm run package` tạo HTML độc lập từ cùng nguồn. Có thể phục vụ `dist/` bằng máy chủ tĩnh để xem giao diện. Những bản này không có backend hay bảo mật nhiều thiết bị; dữ liệu trình duyệt cũ không tự nhập vào MariaDB.
 
-- `dist/js/themes.js`: danh mục chủ đề, tương thích cấu hình cũ và bản sao màu hiển thị; không có phụ thuộc DOM.
-- `dist/js/content.js`: danh mục nội dung gốc, kiểm tra dữ liệu, biến thương hiệu và tương thích cấu hình cũ.
-- `dist/js/content-editor.js`: lớp `ContentEditor` quản lý bản nháp, logo, xem trước và khôi phục.
-- `dist/js/access-policy.js`: danh mục quyền, nhóm mẫu, kiểm tra phiên và quyền cho route/action/form.
-- `dist/js/staff.js`: lớp `StaffService` quản lý tài khoản, phiên demo, thu hồi quyền và audit.
-- `dist/js/staff-ui.js`: giao diện đăng nhập, bảng nhân viên, cấp quyền và nhật ký.
-- `dist/js/domain.js`: các lớp `GameService`, `ProbabilityPolicy`, `MemoryRepository`; hàm thuần kiểm tra dữ liệu, thời gian, tỷ lệ.
-- `dist/js/reward-codes.js`: phân tích danh sách, kiểm tra kho mã, khớp mã và tạo bản chụp chỉ chứa thông tin quà đã cấp.
-- `dist/js/reward-code-ui.js`: nhập TXT/CSV, xem trước lời hướng dẫn và hiển thị mã nhận quà.
-- `dist/js/storage.js`: adapter `LocalRepository`, tuần tự hóa thao tác và dùng Web Locks khi trình duyệt hỗ trợ.
-- `dist/js/visuals.js`: `WheelRenderer`, `SoundController`, icon và định dạng.
-- `dist/js/app.js`: controller giao diện và các màn hình, không tự tính kết quả ngoài `GameService`.
-- `dist/js/release-copy.js`: chuyển cách hiển thị các câu mặc định cũ; không ghi đè nội dung riêng hoặc bản ghi voucher.
-- `tests/`: 83 kiểm thử nghiệp vụ, chủ đề, nội dung, phục hồi, kho mã và tranh chấp lưu.
-- `scripts/package.mjs`: sinh bản HTML độc lập từ các mô-đun.
-- `scripts/prepare-pages.mjs`: tạo bản xuất bản `release/pages`, gắn cùng mã phiên bản theo nội dung cho CSS và mọi mô-đun JavaScript để tránh bộ nhớ đệm trộn mã cũ/mới.
-- `docs/ARCHITECTURE.md`: định hướng chuyển sang Laravel + MySQL.
+## Cấu trúc và phát triển
 
-Dùng hướng đối tượng ở các thành phần có trách nhiệm/trạng thái; dùng hàm thuần cho tác vụ độc lập, dễ tái sử dụng. Không dùng kế thừa nhiều tầng hoặc một lớp cho mỗi hàm.
+- `dist/js/app.js`: controller giao diện, nhận service qua dependency injection.
+- `dist/js/api.js`: adapter API cùng origin, CSRF, giữ request đang chờ để retry không cấp trùng.
+- `dist/js/domain.js`, `storage.js`: nghiệp vụ/repository cho bản tĩnh.
+- `dist/js/themes.js`, `content.js`, `content-editor.js`: theme, thương hiệu, logo và bản nháp.
+- `dist/js/access-policy.js`, `staff.js`, `staff-ui.js`: quyền và giao diện nhân viên.
+- `dist/js/reward-codes.js`, `reward-code-ui.js`: parser, kho mã và hiển thị mã quà.
+- `server/app/Domain`: IdentityService, GameService, CampaignService, Probability, Snapshot, Access, Validation và Store.
+- `server/database/migrations`: schema, khóa ngoại và unique constraints.
+- `server/app/Console/Commands`: cài đặt, chẩn đoán, dọn phiên và đặt lại mật khẩu qua CLI.
+- `tests/`, `server/tests/`: kiểm thử frontend/domain/API và tranh chấp MariaDB.
+- `.github/workflows/server.yml`: CI trên MariaDB tách biệt; không tự triển khai VPS.
 
-## Kiểm tra và đóng gói
+Luồng quà: server xác thực → khóa transaction → trừ lượt/kho, cấp mã → commit → trình duyệt diễn hoạt. Chạy `npm test`; backend dùng `composer test`, định dạng bằng `vendor/bin/pint --test`. Các kiểm thử DB chỉ dùng `anni_game_test`, không dùng user/database sản xuất.
 
-Node.js 20 trở lên, không cần cài thư viện JavaScript:
-
-```bash
-npm test
-npm run build
-npm run package
-```
-
-## Đưa lên GitHub Pages
-
-1. Tạo repository cho ứng dụng. Với GitHub Free, repository dùng Pages cần công khai.
-2. Đưa toàn bộ mã nguồn vào nhánh `main`.
-3. Vào **Settings → Pages → Source: GitHub Actions**.
-4. Workflow `.github/workflows/pages.yml` chạy kiểm thử rồi đóng gói và xuất bản thư mục `release/pages`.
-5. Mở URL mà bước deploy trả về; không đoán URL nếu repository dùng tên hoặc miền khác.
-
-Pages phục vụ bản giao diện để kiểm tra trước khi chuyển máy chủ. Bản phục vụ khách thật cần backend và nơi lưu dữ liệu tập trung.
-
-## Tài liệu nền tảng
-
-- https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages
-- https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits
+Chưa tích hợp POS/app mua hàng. Một chiến dịch; snapshot/báo cáo hiện chưa phân trang server, cần đo tải theo lượng khách dự kiến. Xem [SERVER-API.md](docs/SERVER-API.md) và [ARCHITECTURE.md](docs/ARCHITECTURE.md).

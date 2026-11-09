@@ -1,0 +1,75 @@
+name: Verify MariaDB backend
+on:
+  pull_request:
+  push:
+    branches: [main, feat/mariadb-vps]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      mariadb:
+        image: mariadb:10.11.14
+        env:
+          MARIADB_ROOT_PASSWORD: testing-root-only
+          MARIADB_DATABASE: anni_game_test
+          MARIADB_USER: anni_test
+          MARIADB_PASSWORD: testing-app-only
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+    env:
+      APP_ENV: testing
+      APP_DEBUG: 'false'
+      APP_KEY: base64:MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI=
+      DB_CONNECTION: mariadb
+      DB_HOST: 127.0.0.1
+      DB_PORT: '3306'
+      DB_DATABASE: anni_game_test
+      DB_USERNAME: anni_test
+      DB_PASSWORD: testing-app-only
+      SESSION_DRIVER: array
+      SESSION_SECURE_COOKIE: 'false'
+      CACHE_STORE: array
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_mysql, pdo_sqlite, mbstring, gd, dom, xml, curl, zip
+          tools: composer:v2
+          coverage: none
+      - name: Create runtime directories
+        working-directory: server
+        run: mkdir -p bootstrap/cache storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs
+      - name: Install locked PHP dependencies
+        working-directory: server
+        run: composer install --prefer-dist --no-interaction --no-progress
+      - name: PHP format
+        working-directory: server
+        run: vendor/bin/pint --test
+      - run: npm test
+      - run: npm run build:server
+      - name: API feature tests on MariaDB
+        working-directory: server
+        run: vendor/bin/phpunit
+      - name: Concurrent allocation and redemption on MariaDB
+        working-directory: server
+        run: php tests/concurrency.php
+      - name: Verify deploy caches
+        working-directory: server
+        run: |
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache
+          php artisan optimize:clear
